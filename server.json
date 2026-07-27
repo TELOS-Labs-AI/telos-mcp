@@ -1,0 +1,31 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "ai.telos-labs/telos-mcp",
+  "title": "TELOS Governance",
+  "description": "Governance infrastructure for AI agents over MCP. Score proposed actions against a Purpose Anchor, verify unsigned integrity-hash receipts offline (key-free; not a signature check), inspect compiled governance centroids, query the append-only audit chain, and queue CCRS counterfactual replays. v0.1 ships with stubbed engine calls; v0.2 wires the telos-gov engine.",
+  "version": "0.1.0",
+  "repository": {
+    "url": "https://github.com/TELOS-Labs-AI/telos-mcp",
+    "source": "github"
+  },
+  "packages": [
+    {
+      "registryType": "pypi",
+      "registryBaseUrl": "https://pypi.org",
+      "identifier": "telos-mcp",
+      "version": "0.1.0",
+      "runtimeHint": "uvx",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "TELOS_AGENT_ID",
+          "description": "Default agent_id used when an MCP client does not pass one explicitly. Optional for v0.1 (stub mode); required once the telos-gov engine is wired in v0.2.",
+          "isRequired": false,
+          "isSecret": false
+        }
+      ]
+    }
+  ]
+}

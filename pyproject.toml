@@ -1,0 +1,65 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "telos-mcp"
+version = "0.1.0"
+description = "Model Context Protocol server for TELOS AI Labs governance (scoring, unsigned integrity-hash receipts, audit chain, CCRS replay)."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+authors = [
+    { name = "TELOS AI Labs", email = "team@telos-labs.ai" }
+]
+keywords = [
+    "mcp",
+    "model-context-protocol",
+    "telos",
+    "ai-governance",
+    "agent-governance",
+    "audit-chain",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+    "telos-receipt>=0.1.0",
+    "mcp>=1.12.0",
+]
+
+[project.optional-dependencies]
+# NOTE: no `engine` extra ships in v0.1. The live governance engine binds in
+# v0.2 via a public, engine-agnostic call surface; until then the adapter fails
+# closed and no engine dependency is pinned here.
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.5",
+]
+
+[project.urls]
+Homepage = "https://telos-labs.ai"
+Repository = "https://github.com/TELOS-Labs-AI/telos-mcp"
+Issues = "https://github.com/TELOS-Labs-AI/telos-mcp/issues"
+Documentation = "https://github.com/TELOS-Labs-AI/telos-mcp#readme"
+
+[project.scripts]
+telos-mcp = "telos_mcp.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["telos_mcp"]
+
+[tool.hatch.build.targets.sdist]
+only-include = ["telos_mcp", "README.md", "LICENSE", "pyproject.toml", "server.json"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
