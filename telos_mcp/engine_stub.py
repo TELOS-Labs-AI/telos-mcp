@@ -41,7 +41,7 @@ STUB_ENGINE = "telos-mcp v0.1 stub (governance engine not wired; unsigned integr
 # -- Verdict + dimension constants -----------------------------------------
 
 VERDICTS = ("EXECUTE", "CLARIFY", "ESCALATE")
-DIMENSIONS = ("purpose", "scope", "boundary", "tool", "chain", "codebase_fidelity")
+DIMENSIONS = ("purpose", "scope", "boundary", "tool", "chain")
 
 
 def _digest(payload: Any) -> str:

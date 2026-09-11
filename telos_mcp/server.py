@@ -50,9 +50,9 @@ mcp = FastMCP(
 def telos_score(action_name: str, action_params: dict[str, Any], agent_id: str) -> dict[str, Any]:
     """Score a proposed agent action against the active Purpose Anchor.
 
-    Returns a verdict (EXECUTE / CLARIFY / ESCALATE) plus a 6-dimension
-    score breakdown across purpose, scope, boundary, tool, chain, and
-    codebase_fidelity. Each call also mints an unsigned integrity-hash
+    Returns a verdict (EXECUTE / CLARIFY / ESCALATE) plus a 5-dimension
+    score breakdown across purpose, scope, boundary, tool, and chain.
+    Each call also mints an unsigned integrity-hash
     receipt (shared telos-receipt envelope) that `telos_verify` -- and the
     telos-trust-surface -- can verify with no translation.
 
@@ -170,7 +170,7 @@ def wiki_resource(path: str) -> str:
 def centroids_resource(dimension: str) -> str:
     """Return the compiled centroid set for one governance dimension.
 
-    Valid dimensions: purpose, scope, boundary, tool, chain, codebase_fidelity.
+    Valid dimensions: purpose, scope, boundary, tool, chain.
     Returns a JSON document describing the centroid set (count, embedding
     dim, checksum). Raw float32 arrays are not transported over MCP.
     """

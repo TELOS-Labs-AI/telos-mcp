@@ -25,7 +25,7 @@ can call them as native tools.
 
 | Tool | Purpose |
 |------|---------|
-| `telos_score(action_name, action_params, agent_id)` | Score a proposed action against the active Purpose Anchor. Returns verdict (`EXECUTE` / `CLARIFY` / `ESCALATE`) plus per-dimension scores across `purpose`, `scope`, `boundary`, `tool`, `chain`, `codebase_fidelity`, plus an unsigned integrity-hash receipt envelope. |
+| `telos_score(action_name, action_params, agent_id)` | Score a proposed action against the active Purpose Anchor. Returns verdict (`EXECUTE` / `CLARIFY` / `ESCALATE`) plus per-dimension scores across `purpose`, `scope`, `boundary`, `tool`, `chain`, plus an unsigned integrity-hash receipt envelope. |
 | `telos_verify(receipt_json)` | Verify an unsigned integrity-hash receipt offline (key-free; not a signature check). Returns `{match, recomputed_integrity_hash, signing_status, reason, ...}`. |
 | `telos_get_pa(agent_id)` | Return the active Purpose Anchor: purpose, hard boundaries, declared scope, allowed tools, centroid dimensions. |
 | `telos_audit(start_iso, end_iso)` | Return audit-chain entries within a time window (capped at 100). |
@@ -36,7 +36,7 @@ can call them as native tools.
 | URI template | Returns |
 |--------------|---------|
 | `telos://wiki/{path}` | A TELOS governance wiki page by relative path. |
-| `telos://centroids/{dimension}` | Compiled centroid metadata for one of `purpose`, `scope`, `boundary`, `tool`, `chain`, `codebase_fidelity`. |
+| `telos://centroids/{dimension}` | Compiled centroid metadata for one of `purpose`, `scope`, `boundary`, `tool`, `chain`. |
 | `telos://audit/{date}` | The audit-chain segment for a given `YYYY-MM-DD` (UTC). |
 
 ### Prompts (user-invokable templates)
@@ -155,7 +155,7 @@ From any client, ask:
 > Use the `telos_get_pa` tool with `agent_id="test"` and show the
 > Purpose Anchor.
 
-You should see a stub PA back containing `"stub": true` and the six
+You should see a stub PA back containing `"stub": true` and the five
 canonical centroid dimensions.
 
 ---
