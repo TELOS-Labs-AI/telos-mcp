@@ -33,7 +33,7 @@ classifiers = [
 ]
 dependencies = [
     "telos-receipt>=0.1.0",
-    "mcp>=1.12.0,<2",
+    "mcp>=1.14.0,<2",
 ]
 
 [project.optional-dependencies]

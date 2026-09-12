@@ -6,7 +6,6 @@ calls (see engine_stub.py for the swap protocol).
 
 Run:
     python -m telos_mcp.server          # stdio transport (Claude Desktop default)
-    mcp dev telos_mcp/server.py         # dev/inspector mode
 
 The module-level `mcp` object is the FastMCP instance; tooling (mcp install,
 mcp dev, ASGI mounts) discovers it by name.
@@ -19,7 +18,7 @@ from typing import Any
 
 from mcp.server.fastmcp import FastMCP
 
-from telos_mcp import engine
+from telos_mcp import __version__, engine
 
 # Engine calls route through the dispatcher (engine.py). With the default flag
 # (TELOS_MCP_ENGINE unset / "stub") active_engine() returns the engine_stub
@@ -40,6 +39,10 @@ mcp = FastMCP(
         "shape with no schema break."
     ),
 )
+# SDK v1 FastMCP has no version constructor parameter. Its protocol server
+# exposes version, which supplies initialize.serverInfo rather than the SDK version.
+# The real stdio handshake is tested at both the declared SDK floor and current v1.
+mcp._mcp_server.version = __version__
 
 
 # =========================================================================

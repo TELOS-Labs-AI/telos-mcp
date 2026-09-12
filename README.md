@@ -171,9 +171,20 @@ pip install -e ".[dev]"
 # Run the server over stdio (what MCP clients spawn):
 python -m telos_mcp.server
 
-# Or use the MCP Inspector for interactive exploration:
-mcp dev telos_mcp/server.py
+# Non-interactive startup smoke check (closes stdin; exits successfully):
+python -m telos_mcp.server < /dev/null
+
+# Run protocol and governance contract tests:
+python -m pytest tests
+
+# Install and test the declared minimum MCP SDK in a disposable environment:
+python tools/check_mcp_floor.py
 ```
+
+The stdio server waits for an MCP client when stdin is open. The startup smoke
+check above tests clean startup and EOF shutdown; the test suite also performs
+a real client initialization handshake. The development extra supplies the
+test and lint tools; interactive Inspector tooling is not included.
 
 ---
 
