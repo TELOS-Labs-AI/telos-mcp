@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "telos-mcp"
-version = "0.1.0"
+version = "0.1.1"
 description = "Model Context Protocol server for TELOS AI Labs governance (scoring, unsigned integrity-hash receipts, audit chain, CCRS replay)."
 readme = "README.md"
 requires-python = ">=3.10"
