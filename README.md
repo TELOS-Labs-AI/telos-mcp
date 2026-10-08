@@ -26,7 +26,8 @@ can call them as native tools.
 | Tool | Purpose |
 |------|---------|
 | `telos_score(action_name, action_params, agent_id)` | Score a proposed action against the active Purpose Anchor. Returns verdict (`EXECUTE` / `CLARIFY` / `ESCALATE`) plus per-dimension scores across `purpose`, `scope`, `boundary`, `tool`, `chain`, plus an unsigned integrity-hash receipt envelope. |
-| `telos_verify(receipt_json)` | Verify an unsigned integrity-hash receipt offline (key-free; not a signature check). Returns `{match, recomputed_integrity_hash, signing_status, reason, ...}`. |
+| `telos_verify_native_receipts(receipts_base64, expected_sha256, start_previous)` | Compare supplied native-v2 receipt bytes, native hashes and predecessor links. No signature, score or content validation. |
+| `telos_verify(receipt_json)` | Accept a JSON string or object and verify an unsigned integrity-hash receipt offline (key-free; not a signature check). Returns `{match, recomputed_integrity_hash, signing_status, reason, ...}`. |
 | `telos_get_pa(agent_id)` | Return the active Purpose Anchor: purpose, hard boundaries, declared scope, allowed tools, centroid dimensions. |
 | `telos_audit(start_iso, end_iso)` | Return audit-chain entries within a time window (capped at 100). |
 | `telos_replay(receipt_id, alt_config_path)` | Queue a CCRS counterfactual replay against an alternate config; returns a `job_id`. |
@@ -92,7 +93,7 @@ the `telos-governance` entry under `mcpServers`:
 }
 ```
 
-Restart Claude Desktop. The five `telos_*` tools should appear in the
+Restart Claude Desktop. The six `telos_*` tools should appear in the
 MCP tool tray.
 
 ### Claude Code
@@ -210,3 +211,23 @@ Apache-2.0. See [`LICENSE`](LICENSE).
 - TELOS AI Labs: https://telos-labs.ai
 - Source: https://github.com/TELOS-Labs-AI/telos-mcp
 - Issues: https://github.com/TELOS-Labs-AI/telos-mcp/issues
+
+## Native receipt verification scope
+
+Version 0.1.2 adds `telos_verify_native_receipts` through
+`telos-receipt[native]>=0.1.1,<0.2`. Supply base64-encoded native-v2 JSONL bytes,
+their SHA-256 pin and a predecessor hash (each hash is 64 lowercase hex characters).
+The tool runs offline and bypasses engine dispatch; it does not read receipt files
+or discover local data. Inputs are capped at 1 MiB, 32 rows and 64 KiB per row.
+
+`PASS` means the supplied bytes match the pin and their canonical input, verdict,
+receipt and predecessor comparisons succeeded. Tampering returns `FAIL`;
+malformed inputs or missing native dependencies return `UNAVAILABLE`, never
+`PASS`. MCP rejects null or non-object/non-string values at its typed boundary.
+
+Receipts are unsigned unless a signature is checked. These verification tools do
+not check signatures or validate scores or content. They do not establish
+identity, custody, trusted genesis or complete workflow coverage.
+`signature_verified` is always false; native proofs are reported as
+`PROOF_PRESENT_UNVERIFIED`. Stub scoring remains synthetic.
+See the dependency's `NOTICE` for native verifier MIT attribution.

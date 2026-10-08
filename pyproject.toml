@@ -1,10 +1,10 @@
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling==1.27.0"]
 build-backend = "hatchling.build"
 
 [project]
 name = "telos-mcp"
-version = "0.1.1"
+version = "0.1.2"
 description = "Model Context Protocol server for TELOS AI Labs governance (scoring, unsigned integrity-hash receipts, audit chain, CCRS replay)."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -32,7 +32,7 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 dependencies = [
-    "telos-receipt>=0.1.0",
+    "telos-receipt[native]>=0.1.1,<0.2",
     "mcp>=1.14.0,<2",
 ]
 
@@ -58,8 +58,11 @@ telos-mcp = "telos_mcp.server:main"
 packages = ["telos_mcp"]
 
 [tool.hatch.build.targets.sdist]
-only-include = ["telos_mcp", "README.md", "LICENSE", "pyproject.toml", "server.json"]
+only-include = ["telos_mcp", "README.md", "LICENSE", "NOTICE", "CHANGELOG.md", "tests", "pyproject.toml", "server.json", "tools"]
 
 [tool.ruff]
 line-length = 100
 target-version = "py310"
+
+[tool.hatch.build]
+artifacts = ["NOTICE"]

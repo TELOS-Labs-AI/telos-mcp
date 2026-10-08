@@ -1,0 +1,6 @@
+telos-mcp attribution
+
+Native-v2 receipt byte verification is provided by the telos-receipt[native]
+dependency. That package contains verifier code adapted from the
+TELOS-Labs-AI/hermes-agent fork, with upstream Nous Research MIT attribution.
+See telos-receipt NOTICE for the complete copyright and permission notice.

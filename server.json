@@ -2,8 +2,8 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "ai.telos-labs/telos-mcp",
   "title": "TELOS Governance",
-  "description": "Governance infrastructure for AI agents over MCP. Score proposed actions against a Purpose Anchor, verify unsigned integrity-hash receipts offline (key-free; not a signature check), inspect compiled governance centroids, query the append-only audit chain, and queue CCRS counterfactual replays. v0.1 ships with stubbed engine calls; v0.2 wires the telos-gov engine.",
-  "version": "0.1.1",
+  "description": "MCP tools for synthetic governance scores and offline receipt byte integrity. Native-v2 checks do not validate scores, content or signatures.",
+  "version": "0.1.2",
   "repository": {
     "url": "https://github.com/TELOS-Labs-AI/telos-mcp",
     "source": "github"
@@ -13,7 +13,7 @@
       "registryType": "pypi",
       "registryBaseUrl": "https://pypi.org",
       "identifier": "telos-mcp",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "runtimeHint": "uvx",
       "transport": {
         "type": "stdio"

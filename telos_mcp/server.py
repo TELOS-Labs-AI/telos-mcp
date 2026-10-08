@@ -1,6 +1,6 @@
 """telos-mcp server: MCP protocol surface for TELOS governance.
 
-Exposes 5 tools, 3 resource templates, and 2 prompts via FastMCP. All engine
+Exposes 6 tools, 3 resource templates, and 2 prompts via FastMCP. All engine
 calls route through `engine_stub` in v0.1; v0.2 swaps in real `telos-gov`
 calls (see engine_stub.py for the swap protocol).
 
@@ -45,6 +45,22 @@ mcp = FastMCP(
 mcp._mcp_server.version = __version__
 
 
+@mcp.tool()
+def telos_verify_native_receipts(receipts_base64: str, expected_sha256: str,
+                                 start_previous: str) -> dict[str, Any]:
+    """Verify supplied native-v2 historical bytes through the actual receipt SDK.
+
+    Key-free integrity only. No scorer, signer, production file lookup or engine
+    dispatch. The existing telos_verify keeps its unsigned payload-envelope API.
+    """
+    from telos_receipt import verify_native_receipts
+    return verify_native_receipts({
+        'receipts_base64': receipts_base64,
+        'expected_sha256': expected_sha256,
+        'start_previous': start_previous,
+    })
+
+
 # =========================================================================
 # Tools
 # =========================================================================
@@ -72,7 +88,7 @@ def telos_score(action_name: str, action_params: dict[str, Any], agent_id: str) 
 
 
 @mcp.tool()
-def telos_verify(receipt_json: str) -> dict[str, Any]:
+def telos_verify(receipt_json: str | dict[str, Any]) -> dict[str, Any]:
     """Verify an unsigned integrity-hash receipt offline.
 
     Recomputes the receipt's integrity hash over its canonical payload using
