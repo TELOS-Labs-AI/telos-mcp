@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 
 import pytest
+
 from telos_mcp import server
 
 

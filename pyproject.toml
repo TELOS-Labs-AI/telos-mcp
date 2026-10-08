@@ -33,7 +33,22 @@ classifiers = [
 ]
 dependencies = [
     "telos-receipt[native]>=0.1.1,<0.2",
-    "mcp>=1.14.0,<2",
+    "mcp>=1.30.0,<2",
+    # Security floors for MCP's advisory-bearing runtime closure. MCP's own
+    # lower bounds still admit the vulnerable versions recorded by TCAS r1.
+    "anyio>=4.15.1",
+    "idna>=3.20",
+    "pydantic-settings>=2.15.0",
+    "pyjwt>=2.15.1",
+    "python-dotenv>=1.2.4",
+    "python-multipart>=0.0.32",
+    "starlette>=1.7.0",
+    # Uvicorn and HTTPX still allow old h11/httpcore transitively. Constrain
+    # that HTTP closure explicitly; floors on its consumers alone are insufficient.
+    "uvicorn>=0.54.0",
+    "httpx>=0.28.1",
+    "httpcore>=1.0.9",
+    "h11>=0.16.0",
 ]
 
 [project.optional-dependencies]
@@ -63,6 +78,20 @@ only-include = ["telos_mcp", "README.md", "LICENSE", "NOTICE", "CHANGELOG.md", "
 [tool.ruff]
 line-length = 100
 target-version = "py310"
+extend-exclude = ["mutants"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.mutmut]
+paths_to_mutate = [
+    "telos_mcp/__init__.py",
+    "telos_mcp/engine.py",
+    "telos_mcp/engine_real.py",
+    "telos_mcp/engine_stub.py",
+    "telos_mcp/server.py",
+]
+also_copy = ["README.md"]
 
 [tool.hatch.build]
 artifacts = ["NOTICE"]

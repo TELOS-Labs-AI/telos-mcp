@@ -34,7 +34,7 @@ def test_real_stdio_initialize_reports_package_identity():
             env={**os.environ, "TELOS_MCP_ENGINE": "stub", "PYTHONPATH": ""},
         )
         async with (
-            stdio_client(params) as (read, write),
+            stdio_client(params, errlog=sys.stderr) as (read, write),
             ClientSession(read, write) as session,
         ):
             result = await session.initialize()
