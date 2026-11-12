@@ -1,5 +1,4 @@
 {
-  "copied_from_worktree": "/Users/jb/ops/h1r-wt/sdk-kit-record-20261111",
   "note": "Copied byte for byte from the telos-receipt repository's committed test fixtures; never edited here. Canary Ed25519 PUBLIC pins only (oracle.json canary_pins); no private key and no real Witness pin. The witnessed fixture is WITNESSED under the canary pins only.",
   "sha256": {
     "not_witnessed/reading.json": "f119a3ed70387085c676ab6a53e7b7b50a77532e52e6b1ce50b74b345c42d2e8",
