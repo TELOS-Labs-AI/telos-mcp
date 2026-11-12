@@ -3,7 +3,7 @@
   "name": "ai.telos-labs/telos-mcp",
   "title": "TELOS Governance",
   "description": "MCP tools for synthetic governance scores and offline receipt byte integrity. Native-v2 checks do not validate scores, content or signatures.",
-  "version": "0.1.2",
+  "version": "0.2.0.dev0",
   "repository": {
     "url": "https://github.com/TELOS-Labs-AI/telos-mcp",
     "source": "github"
@@ -13,7 +13,7 @@
       "registryType": "pypi",
       "registryBaseUrl": "https://pypi.org",
       "identifier": "telos-mcp",
-      "version": "0.1.2",
+      "version": "0.2.0.dev0",
       "runtimeHint": "uvx",
       "transport": {
         "type": "stdio"

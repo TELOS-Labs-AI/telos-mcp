@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "telos-mcp"
-version = "0.1.2"
+version = "0.2.0.dev0"
 description = "Model Context Protocol server for TELOS AI Labs governance (scoring, unsigned integrity-hash receipts, audit chain, CCRS replay)."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -32,7 +32,9 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 dependencies = [
-    "telos-receipt[native]>=0.1.1,<0.2",
+    # DRAFT (local 0.2.0.dev0): the telos-receipt that carries `telos_receipt.record`. The released range and
+    # version are set at release.
+    "telos-receipt[native]>=0.2.0.dev0,<0.3",
     "mcp>=1.30.0,<2",
     # Security floors for MCP's advisory-bearing runtime closure. MCP's own
     # lower bounds still admit the vulnerable versions recorded by TCAS r1.

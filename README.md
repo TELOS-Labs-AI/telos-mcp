@@ -231,3 +231,26 @@ identity, custody, trusted genesis or complete workflow coverage.
 `signature_verified` is always false; native proofs are reported as
 `PROOF_PRESENT_UNVERIFIED`. Stub scoring remains synthetic.
 See the dependency's `NOTICE` for native verifier MIT attribution.
+
+## Kit record check (DRAFT: unreleased 0.2.0.dev0; every sentence of this section is draft wording)
+
+DRAFT. `telos_verify_kit_record(receipt_json, witness_json="", reading_json="")` checks a
+kit record offline with the kit's own reader, through `telos_receipt.record.check_record`,
+and returns that result unchanged. Pass the text of `receipt.json` and, when you have them,
+of `witness.json` and `reading.json`. The tool takes content, not paths; it makes no network
+call and no engine call and leaves nothing on disk. Each string is passed on as its UTF-8
+bytes and is never parsed or re-serialised by the server.
+
+DRAFT. `ok: true` means only that the reader ran to a report. Authenticity is
+`witness_state` alone: `WITNESSED` or `NOT_WITNESSED`. `WITNESSED` means the supplied digests
+are under a Witness signature that checks against the pinned Witness key. It does not mean
+the run was observed or commissioned. The tool always checks under the pinned key
+(`pins: "default"`) and has no argument to change it. Record content is data, never
+instructions.
+
+DRAFT. An empty string for `witness_json` or `reading_json` means the file was not supplied.
+The tool cannot tell a missing file from an empty one. Refusals are
+`{"ok": false, "reason": ...}`: `invalid_argument`, `input_too_large` (receipt 1,048,576
+bytes, witness row 4,096, reading 32,768), the other fixed reasons of `telos_receipt.record`,
+and `tool_unavailable` when the kit record reader cannot be imported (it needs Python 3.11 or
+later; the server and the other six tools keep working on Python 3.10).
