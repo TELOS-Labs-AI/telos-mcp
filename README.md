@@ -263,5 +263,9 @@ later; the server and the other six tools keep working on Python 3.10).
 DRAFT. Two boundaries. Over MCP, an argument that is not a JSON string (null, a number, a
 boolean, an array, an object) is refused by the MCP framework before this tool runs: the
 client gets the framework's error, not one of the refusals above (measured with `mcp` 1.26.0
-only, in process and over stdio). Called directly as a Python function, the tool answers
-every value with a dict and raises no `Exception`.
+only, in process and over stdio; the declared floor, 1.30, is not measured). Called directly
+as a Python function, the tool answers with a dict and
+raises no `Exception`, with one case no test covers: a `MemoryError`
+while a string is encoded to UTF-8 is not caught. Nothing is left on disk, with one case: when
+the reader cannot remove its own temporary directory the refusal carries `"residual": true`
+and that directory may remain.

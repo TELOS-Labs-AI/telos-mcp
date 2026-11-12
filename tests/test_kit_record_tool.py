@@ -949,3 +949,18 @@ def test_new_public_lines_are_marked_draft():
     section = readme.split("## Kit record check (DRAFT")[1]
     assert TOOL in section and "tool_unavailable" in section
     assert "## Kit record check (DRAFT" not in readme.split("## Native receipt verification scope")[0]
+
+
+def test_a6_the_wording_keeps_the_three_limits_tes_named_at_r2():
+    """r3 (TES 2026-11-12, three LOW): the "no Exception" line names the uncaught MemoryError, the tool description
+    carries the measured mcp version, and "nothing left on disk" keeps the SDK's `residual` cleanup-failure case."""
+    assert tool()
+    listed = {t.name: t for t in asyncio.run(server.mcp.list_tools())}[TOOL]
+    description = " ".join(listed.description.split())
+    readme = " ".join((ROOT / "README.md").read_text().split("## Kit record check (DRAFT")[1].split())
+    changelog = " ".join((ROOT / "CHANGELOG.md").read_text().split("## 0.2.0.dev0")[1].split("\n## ")[0].split())
+    for text in (description, readme, changelog):
+        assert "raises no `Exception`, with one case no test covers: a `MemoryError`" in text
+        assert "measured with `mcp` 1.26.0 only" in text
+        assert '`"residual": true`' in text
+        assert "every value with a dict and raises no `Exception`." not in text

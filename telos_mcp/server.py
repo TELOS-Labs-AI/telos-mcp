@@ -185,7 +185,9 @@ def telos_verify_kit_record(receipt_json: str, witness_json: str = "",
     A kit record is three files: `receipt.json` and, beside it, optionally
     `witness.json` and `reading.json`. Pass the text of each file as a string.
     Content in, report out: no path, no network, no engine call, and nothing is
-    left on disk. Each string is passed on as its UTF-8 bytes, byte for byte: it
+    left on disk, with one case: when the reader cannot remove its own temporary
+    directory the refusal carries `"residual": true` and that directory may
+    remain. Each string is passed on as its UTF-8 bytes, byte for byte: it
     is never parsed, re-serialised or normalised here.
 
     For string arguments the answer is exactly what
@@ -231,8 +233,11 @@ def telos_verify_kit_record(receipt_json: str, witness_json: str = "",
     Two boundaries. Over MCP, an argument that is not a JSON string (null, a
     number, a boolean, an array, an object) is refused by the MCP framework
     before this tool runs: the client gets the framework's error, not one of
-    the refusals above. Called directly as a Python function, the tool answers
-    every value with a dict and raises no `Exception`.
+    the refusals above (measured with `mcp` 1.26.0 only, in process and over
+    stdio; the declared floor, 1.30, is not measured). Called directly as a
+    Python function, the tool answers with a dict and
+    raises no `Exception`, with one case no test covers: a `MemoryError`
+    while a string is encoded to UTF-8 is not caught.
     """
     try:
         # Lazy, and here only: the server and the other tools start without this module (Python 3.10, or a
