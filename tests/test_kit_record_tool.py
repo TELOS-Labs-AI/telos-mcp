@@ -736,7 +736,9 @@ def stdio_parameters(*boot_arguments):
 @pytest.fixture(scope="module")
 def stdio_boundary(tmp_path_factory):
     """One real server over stdio whose registered tool function is counted: a valid call, then every kind of
-    non-string for every argument, then a valid call again. {label: (isError, text, structured, invocations)}."""
+    non-string for every argument, then a valid call again. {label: (isError, text, structured, invocations)},
+    or, when the server did not start or did not answer, a sentence saying so (each test then fails by its own
+    assertion, not by a setup error)."""
     log = tmp_path_factory.mktemp("invocations") / "tool-invocations.log"
     log.write_text("")
     valid = supplied("witnessed")
@@ -760,13 +762,14 @@ def stdio_boundary(tmp_path_factory):
     try:
         return asyncio.run(asyncio.wait_for(exercise(), timeout=60))
     except (Exception, GROUP) as e:  # noqa: BLE001
-        pytest.fail(f"the server did not start or did not answer over stdio: {type(e).__name__}: {e}")
+        return f"the server did not start or did not answer over stdio: {type(e).__name__}: {e}"
 
 
 @pytest.mark.parametrize("kind", list(NOT_A_STRING))
 @pytest.mark.parametrize("argument", ARGUMENTS)
 def test_a5_2_protocol_boundary_stdio_refuses_a_non_string_and_the_tool_is_not_invoked(argument, kind, stdio_boundary):
     """Protocol boundary, real stdio. Measured on mcp 1.26.0 only."""
+    assert isinstance(stdio_boundary, dict), stdio_boundary
     expected = record().check_record(*raw("witnessed"))
     for beside in ("valid first", "valid last"):  # beside: a valid call is answered and counted, before and after
         assert stdio_boundary[beside][0] is False and stdio_boundary[beside][2:] == (expected, 1), beside
