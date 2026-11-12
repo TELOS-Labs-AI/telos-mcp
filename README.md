@@ -264,8 +264,12 @@ DRAFT. Two boundaries. Over MCP, an argument that is not a JSON string (null, a 
 boolean, an array, an object) is refused by the MCP framework before this tool runs: the
 client gets the framework's error, not one of the refusals above (measured with `mcp` 1.26.0
 only, in process and over stdio; the declared floor, 1.30, is not measured). Called directly
-as a Python function, the tool answers with a dict and
-raises no `Exception`, with one case no test covers: a `MemoryError`
-while a string is encoded to UTF-8 is not caught. Nothing is left on disk, with one case: when
-the reader cannot remove its own temporary directory the refusal carries `"residual": true`
-and that directory may remain.
+as a Python function, the tool has these boundaries: an `Exception` from importing the reader
+or from the reader call becomes `tool_unavailable`; an argument that is not a string, or a
+string UTF-8 cannot carry, gets `invalid_argument`; a resource failure (for example a
+`MemoryError` while a string is encoded) is not caught and may escape; a call that does not
+bind to the signature fails before the tool runs; and process-control exceptions
+(`KeyboardInterrupt`, `SystemExit`) propagate. Nothing is left on disk when the tool returns.
+One case: when the reader cannot remove its own temporary directory a returned refusal carries
+`"residual": true` and that directory may remain. If a process-control exception interrupts the
+call, cleanup is attempted but a directory may remain and no answer is returned.

@@ -185,9 +185,11 @@ def telos_verify_kit_record(receipt_json: str, witness_json: str = "",
     A kit record is three files: `receipt.json` and, beside it, optionally
     `witness.json` and `reading.json`. Pass the text of each file as a string.
     Content in, report out: no path, no network, no engine call, and nothing is
-    left on disk, with one case: when the reader cannot remove its own temporary
-    directory the refusal carries `"residual": true` and that directory may
-    remain. Each string is passed on as its UTF-8 bytes, byte for byte: it
+    left on disk when the tool returns. One case: when the reader cannot remove
+    its own temporary directory a returned refusal carries `"residual": true`
+    and that directory may remain. If a process-control exception interrupts the
+    call, cleanup is attempted but a directory may remain and no answer is
+    returned. Each string is passed on as its UTF-8 bytes, byte for byte: it
     is never parsed, re-serialised or normalised here.
 
     For string arguments the answer is exactly what
@@ -234,10 +236,15 @@ def telos_verify_kit_record(receipt_json: str, witness_json: str = "",
     number, a boolean, an array, an object) is refused by the MCP framework
     before this tool runs: the client gets the framework's error, not one of
     the refusals above (measured with `mcp` 1.26.0 only, in process and over
-    stdio; the declared floor, 1.30, is not measured). Called directly as a
-    Python function, the tool answers with a dict and
-    raises no `Exception`, with one case no test covers: a `MemoryError`
-    while a string is encoded to UTF-8 is not caught.
+    stdio; the declared floor, 1.30, is not measured).
+
+    Called directly as a Python function, the tool has these boundaries: an
+    `Exception` from importing the reader or from the reader call becomes
+    `tool_unavailable`; an argument that is not a string, or a string UTF-8
+    cannot carry, gets `invalid_argument`; a resource failure (for example a
+    `MemoryError` while a string is encoded) is not caught and may escape; a
+    call that does not bind to the signature fails before the tool runs; and
+    process-control exceptions (`KeyboardInterrupt`, `SystemExit`) propagate.
     """
     try:
         # Lazy, and here only: the server and the other tools start without this module (Python 3.10, or a
@@ -255,7 +262,7 @@ def telos_verify_kit_record(receipt_json: str, witness_json: str = "",
     try:
         # The empty string is "not supplied": absent (None), never an empty file. No `pins`: the frozen default.
         result = check_record(receipt, witness or None, reading or None)
-    except Exception:  # noqa: BLE001  (the SDK promises none; no Exception may leave this tool)
+    except Exception:  # noqa: BLE001  (any Exception from the reader call is answered, not raised)
         return {"ok": False, "reason": _KIT_RECORD_UNAVAILABLE}
     if not isinstance(result, dict):
         return {"ok": False, "reason": _KIT_RECORD_UNAVAILABLE}

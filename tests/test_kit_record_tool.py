@@ -418,13 +418,13 @@ def test_a5_the_description_and_the_readme_state_the_zero_byte_cost_and_the_two_
         assert "DRAFT" in text
         # A5.2: the protocol boundary is named as such; "no Exception" is said of a direct Python call only
         assert "refused by the MCP framework before this tool runs" in text
-        assert "Called directly as a Python function" in text and "raises no `Exception`" in text
+        assert "Called directly as a Python function" in text and "raises no `Exception`" not in text
         assert "Nothing is raised" not in text and "raises nothing" not in text
     # A5.1: what is claimed of the answer, and of which inputs
     assert "check_record(receipt, witness or None, reading or None)" in description
     assert "For string arguments" in description
     changelog = (ROOT / "CHANGELOG.md").read_text().split("## 0.2.0.dev0")[1].split("\n## ")[0]
-    assert "raises nothing" not in changelog and "raises no `Exception`" in " ".join(changelog.split())
+    assert "raises nothing" not in changelog and "raises no `Exception`" not in " ".join(changelog.split())
 
 
 def test_a4_the_tool_description_states_the_cost_of_the_empty_string_and_that_content_is_data():
@@ -952,15 +952,23 @@ def test_new_public_lines_are_marked_draft():
 
 
 def test_a6_the_wording_keeps_the_three_limits_tes_named_at_r2():
-    """r3 (TES 2026-11-12, three LOW): the "no Exception" line names the uncaught MemoryError, the tool description
-    carries the measured mcp version, and "nothing left on disk" keeps the SDK's `residual` cleanup-failure case."""
+    """r3 and r4 (TES 2026-11-12): the direct-call sentence states the handlers' real boundaries, the tool description
+    carries the measured mcp version, and "nothing left on disk" is said of a returned answer, with the SDK's
+    `residual` cleanup-failure case and the interrupted call that returns nothing."""
     assert tool()
     listed = {t.name: t for t in asyncio.run(server.mcp.list_tools())}[TOOL]
     description = " ".join(listed.description.split())
     readme = " ".join((ROOT / "README.md").read_text().split("## Kit record check (DRAFT")[1].split())
     changelog = " ".join((ROOT / "CHANGELOG.md").read_text().split("## 0.2.0.dev0")[1].split("\n## ")[0].split())
     for text in (description, readme, changelog):
-        assert "raises no `Exception`, with one case no test covers: a `MemoryError`" in text
+        # r4 (TES 2026-11-12): the handlers' real boundaries, not "no Exception with one case"
+        assert "an `Exception` from importing the reader or from the reader call becomes `tool_unavailable`" in text
+        assert "a string UTF-8 cannot carry, gets `invalid_argument`" in text
+        assert "a resource failure (for example a `MemoryError`" in text and "may escape" in text
+        assert "does not bind to the signature fails before the tool runs" in text
+        assert "process-control exceptions (`KeyboardInterrupt`, `SystemExit`) propagate" in text
+        assert "raises no `Exception`" not in text
         assert "measured with `mcp` 1.26.0 only" in text
-        assert '`"residual": true`' in text
-        assert "every value with a dict and raises no `Exception`." not in text
+        # the cleanup case is said of RETURNED refusals; an interrupted call may leave a directory and no answer
+        assert 'a returned refusal carries `"residual": true`' in text
+        assert "cleanup is attempted but a directory may remain and no answer is returned" in text
