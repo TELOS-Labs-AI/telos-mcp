@@ -4,8 +4,8 @@
 
 - DRAFT: add `telos_verify_kit_record(receipt_json, witness_json="", reading_json="")`: check a kit record (`receipt.json`, `witness.json`, `reading.json`, each passed as text) offline through `telos_receipt.record.check_record` and return its result unchanged. No path argument, no network, no engine call, nothing left on disk.
 - DRAFT: the result carries `witness_state` (`WITNESSED` or `NOT_WITNESSED`) and `pins: "default"`; `ok: true` means the reader ran, not that the record is authentic. The tool has no `pins` argument.
-- DRAFT: an empty string for `witness_json` or `reading_json` means the file was not supplied; the tool cannot tell a missing file from an empty one.
-- DRAFT: refusals are `{"ok": false, "reason": ...}`: `invalid_argument`, `input_too_large`, the other fixed reasons of `telos_receipt.record`, and `tool_unavailable` when `telos_receipt.record` cannot be imported (Python 3.10, or a `telos-receipt` without it). The tool raises nothing.
+- DRAFT: an empty string for `witness_json` or `reading_json` means the file was not supplied; the tool cannot tell a missing file from an empty one. A zero-byte witness file and a zero-byte reading file cannot be represented through this tool: both arrive as not supplied. `telos_receipt.record.check_record` still accepts and distinguishes them when it is called with bytes.
+- DRAFT: refusals are `{"ok": false, "reason": ...}`: `invalid_argument`, `input_too_large`, the other fixed reasons of `telos_receipt.record`, and `tool_unavailable` when `telos_receipt.record` cannot be imported (Python 3.10, or a `telos-receipt` without it). Over MCP, an argument that is not a JSON string is refused by the MCP framework before this tool runs (measured with `mcp` 1.26.0 only). Called directly as a Python function, the tool raises no `Exception`.
 - DRAFT: `telos_receipt.record` is imported inside the new tool only; the six existing tools and their outputs are unchanged, and the Python floor stays 3.10.
 - DRAFT: depend on `telos-receipt[native]>=0.2.0.dev0,<0.3`.
 

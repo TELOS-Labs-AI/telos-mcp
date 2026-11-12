@@ -188,7 +188,10 @@ def telos_verify_kit_record(receipt_json: str, witness_json: str = "",
     left on disk. Each string is passed on as its UTF-8 bytes, byte for byte: it
     is never parsed, re-serialised or normalised here.
 
-    The answer is exactly what `telos_receipt.record.check_record` returns:
+    For string arguments the answer is exactly what
+    `telos_receipt.record.check_record(receipt, witness or None, reading or None)`
+    returns for their UTF-8 bytes, where an empty `witness_json` or
+    `reading_json` is passed as absent:
     `{ok, report, witness_state, pins, kit_reader}`. `ok: true` means only that
     the reader ran to a report. It is not authenticity. Authenticity is
     `witness_state` alone: `WITNESSED` or `NOT_WITNESSED`. `WITNESSED` means the
@@ -210,6 +213,11 @@ def telos_verify_kit_record(receipt_json: str, witness_json: str = "",
     Known cost of the empty string: a caller cannot tell "no witness file" from
     "an empty witness file" (or reading file) through this tool. Both are read
     as not supplied. An empty file is not a witness row or a reading.
+    A zero-byte witness file and a zero-byte reading file cannot be represented
+    through this tool: both arrive as not supplied.
+    `telos_receipt.record.check_record` still accepts and distinguishes them
+    when it is called with bytes. `receipt_json` has no such reading: an empty
+    receipt is passed on as zero bytes.
 
     Returns:
         The report dict above, or a refusal `{"ok": false, "reason": ...}`:
@@ -218,7 +226,13 @@ def telos_verify_kit_record(receipt_json: str, witness_json: str = "",
         bytes, witness row 4,096, reading 32,768), the other fixed reasons of
         `telos_receipt.record`, and `tool_unavailable` when the kit record
         reader cannot be used here (it needs Python 3.11 or later and a
-        `telos-receipt` that carries it). Nothing is raised.
+        `telos-receipt` that carries it).
+
+    Two boundaries. Over MCP, an argument that is not a JSON string (null, a
+    number, a boolean, an array, an object) is refused by the MCP framework
+    before this tool runs: the client gets the framework's error, not one of
+    the refusals above. Called directly as a Python function, the tool answers
+    every value with a dict and raises no `Exception`.
     """
     try:
         # Lazy, and here only: the server and the other tools start without this module (Python 3.10, or a
@@ -236,7 +250,7 @@ def telos_verify_kit_record(receipt_json: str, witness_json: str = "",
     try:
         # The empty string is "not supplied": absent (None), never an empty file. No `pins`: the frozen default.
         result = check_record(receipt, witness or None, reading or None)
-    except Exception:  # noqa: BLE001  (the SDK promises none; nothing may leave this tool)
+    except Exception:  # noqa: BLE001  (the SDK promises none; no Exception may leave this tool)
         return {"ok": False, "reason": _KIT_RECORD_UNAVAILABLE}
     if not isinstance(result, dict):
         return {"ok": False, "reason": _KIT_RECORD_UNAVAILABLE}
