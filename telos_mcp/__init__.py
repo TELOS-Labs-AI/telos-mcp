@@ -11,5 +11,5 @@ calls so the protocol surface can be exercised end-to-end without an installed
 engine; v0.2 replaces the stubs with live calls.
 """
 
-__version__ = "0.1.2"
+__version__ = "0.2.0.dev0"
 __all__ = ["__version__"]

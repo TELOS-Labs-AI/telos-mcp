@@ -41,7 +41,7 @@ def test_real_stdio_initialize_reports_package_identity():
             assert result.serverInfo.name == "telos-governance"
             assert result.serverInfo.version == __version__ == version("telos-mcp")
             tools = await session.list_tools()
-            assert len(tools.tools) == 6
+            assert len(tools.tools) == 7
             assert "telos_verify_native_receipts" in {tool.name for tool in tools.tools}
 
     asyncio.run(asyncio.wait_for(handshake(), timeout=20))
