@@ -1,0 +1,18 @@
+{
+  "copied_from_worktree": "/Users/jb/ops/h1r-wt/sdk-kit-record-20261111",
+  "note": "Copied byte for byte from the telos-receipt repository's committed test fixtures; never edited here. Canary Ed25519 PUBLIC pins only (oracle.json canary_pins); no private key and no real Witness pin. The witnessed fixture is WITNESSED under the canary pins only.",
+  "sha256": {
+    "not_witnessed/reading.json": "f119a3ed70387085c676ab6a53e7b7b50a77532e52e6b1ce50b74b345c42d2e8",
+    "not_witnessed/receipt.json": "46f0b6ac73c7fa32c6da51ccd0555d2680c19e14beaa35e31f1f14dc4a72fd70",
+    "oracle.json": "0134c4a3bd58b83903d0175c8e093ae9324abdaba5f5a6b3a51256a756f0bc0b",
+    "refused/reading.json": "81e28d6b9d6cca8033dd71ed6b30f3467ba32473fca674ca74e573c3aaa195b1",
+    "refused/receipt.json": "30cae8c99b03cb771deeeddf812a5cdff6faba85f9f5ba3e325ec4e63756d6e1",
+    "refused/witness.json": "c24f2a79f55cccd32dbed11680d17f006a2b487af1c16a8366c53cafed2f7610",
+    "witnessed/reading.json": "066317bfcd0be7f6784d2904ef65c6fd4b12bf97e25b2c2cbce1898314c10d9c",
+    "witnessed/receipt.json": "58fd240578c4ffbfc6e5f8608f26599d62b9350ceea7a51454ab5bfb8dfbfd7c",
+    "witnessed/witness.json": "5e6bee79b089b50e9ed56f0d8e1300283cfef56a1aef2290ea044508683e95fa"
+  },
+  "source_commit": "804b38165fa8baebda3c200d8d6c75261fc6d4ec",
+  "source_path": "tests/kit_record_fixtures/",
+  "source_repository": "telos-receipt"
+}

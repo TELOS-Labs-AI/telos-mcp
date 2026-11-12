@@ -1,0 +1,607 @@
+{
+ "base_commit": "b53473a3d6a48ad8ab42b7c8d3d20d1eff631bd3",
+ "calls": [
+  {
+   "arguments": {
+    "expected_sha256": "f3ba0432cb1bd167ab07cf3c7d96ad1b488516024da1212cafbc579e32b966a6",
+    "receipts_base64": "eyJhcGlfcmVxdWVzdF9pZCI6ImRlbW8tcmVxdWVzdCIsImFyZ3MiOnsicGF0aCI6ImZpeHR1cmUudHh0In0sImNhbm9uaWNhbF9pbnB1dF9oYXNoIjoiOTk3NjdlYWZiOGRjZjg3YjllNWVhNTBhNTZlNmJkZTA0MTgyZmZhZmIzZWQ3YTU4ZGRiMjcxYjM4ZmMxMmM2ZSIsImNsYXNzaWZpY2F0aW9uIjp7ImFjdGlvbl90ZXh0IjoiUmVhZCBzeW50aGV0aWMgZml4dHVyZSIsImlzX2Nyb3NzX2dyb3VwIjpmYWxzZSwicmlza190aWVyIjoibG93IiwidG9vbF9ncm91cCI6ImZpbGVzeXN0ZW0ifSwiY29uZmlnX2hhc2giOiIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyIiwicGFfaGFzaCI6IjExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTEiLCJwcmV2aW91c19yZWNlaXB0X2hhc2giOiIwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwIiwicHJvZmlsZV9pZCI6ImRlbW8tcHJvZmlsZSIsInJlY2VpcHRfaGFzaCI6IjhjM2FjNDExYTFkNzYzYjExYmM2MWE0ZDEyNjRhOTgxNmM1MzBhYjQyOTk4MWM2MDk0ZDAwOTIwNDRhYzc4M2QiLCJzY2hlbWFfdmVyc2lvbiI6InRlbG9zLm9wZXJhdGlvbmFsLnRvb2xfY2FsbC52MiIsInNjb3Jlcl9tb2RlbF9oYXNoIjoiMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMyIsInNjb3Jlcl92ZXJzaW9uIjoic3ludGhldGljLWZpeHR1cmUiLCJzZXNzaW9uX2lkIjoiZGVtby1zZXNzaW9uIiwidGFza19pZCI6ImRlbW8tdGFzayIsInRvb2xfY2FsbF9pZCI6ImRlbW8tY2FsbCIsInRvb2xfbmFtZSI6InJlYWRfZmlsZSIsInR1cm5faWQiOiJkZW1vLXR1cm4iLCJ2ZXJkaWN0Ijp7ImRlY2lzaW9uIjoiRVhFQ1VURSIsInNjb3JlIjowLjV9LCJ2ZXJkaWN0X2hhc2giOiI1YjdkNWU4ZTc4NTg0YTUyNGFiODdjMzE4ZDUyNmJmMjBlOTRjZjIyYzhmNjNiZmQ2NzYxN2Y2NWJmYzFlZTlmIiwidmVyc2lvbiI6Mn0K",
+    "start_previous": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   "label": "native: the synthetic request",
+   "structured": {
+    "activity": "RETROSPECTIVE_RECOMPUTATION_OF_RETAINED_HASHES_NOT_SCORES",
+    "authenticity": "NOT_ESTABLISHED",
+    "complete_workflow": "NOT_ESTABLISHED",
+    "coverage": "ONLY_SUPPLIED_ROWS_NOT_ORIGINAL_ACTION_POPULATION",
+    "independent_population": "NOT_ESTABLISHED",
+    "native_report": {
+     "authenticity": "NOT_CLAIMED",
+     "consumed": {
+      "adapter": "6eb37e9f8018ff98a6d4546f707de17cb64b53038a6d7311bf7ba89ab79e24bf",
+      "receipts": "f3ba0432cb1bd167ab07cf3c7d96ad1b488516024da1212cafbc579e32b966a6"
+     },
+     "consumed_byte_lengths": {
+      "receipts": 1074
+     },
+     "integrity_status": "PASS",
+     "origin": "NOT_CLAIMED",
+     "per_record": [
+      {
+       "byte_end": 1074,
+       "byte_start": 0,
+       "consumed_receipts_sha256": "f3ba0432cb1bd167ab07cf3c7d96ad1b488516024da1212cafbc579e32b966a6",
+       "native_checks": {
+        "canonical_input_hash": "PASS",
+        "diagnostics": {
+         "computed_hashes": {
+          "canonical_input_hash": "99767eafb8dcf87b9e5ea50a56e6bde04182ffafb3ed7a58ddb271b38fc12c6e",
+          "receipt_hash": "8c3ac411a1d763b11bc61a4d1264a9816c530ab429981c6094d0092044ac783d",
+          "verdict_hash": "5b7d5e8e78584a524ab87c318d526bf20e94cf22c8f63bfd67617f65bfc1ee9f"
+         },
+         "reasons": [],
+         "status": "source-claims-nonbinding"
+        },
+        "previous_receipt_link": "PASS",
+        "receipt_hash": "PASS",
+        "verdict_hash": "PASS"
+       },
+       "raw_row_sha256": "f3ba0432cb1bd167ab07cf3c7d96ad1b488516024da1212cafbc579e32b966a6",
+       "row_index": 1
+      }
+     ],
+     "problems": [],
+     "report_version": "verify.native_v2.integrity.v1",
+     "trust_class": "UNSIGNED"
+    },
+    "predecessor_provenance": "CALLER_SUPPLIED_NOT_AUTHENTICATED_BY_THIS_CHECK",
+    "problems": [],
+    "receipt_sdk_version": "0.1.1",
+    "scope": "NATIVE_BYTE_INTEGRITY_ONLY",
+    "scoring": {
+     "reason": "HISTORICAL_MEASUREMENT_INPUTS_MISSING",
+     "status": "UNSUPPORTED"
+    },
+    "signature_verified": false,
+    "status": "PASS"
+   },
+   "text": "{\n  \"receipt_sdk_version\": \"0.1.1\",\n  \"scope\": \"NATIVE_BYTE_INTEGRITY_ONLY\",\n  \"activity\": \"RETROSPECTIVE_RECOMPUTATION_OF_RETAINED_HASHES_NOT_SCORES\",\n  \"status\": \"PASS\",\n  \"problems\": [],\n  \"native_report\": {\n    \"report_version\": \"verify.native_v2.integrity.v1\",\n    \"integrity_status\": \"PASS\",\n    \"consumed\": {\n      \"receipts\": \"f3ba0432cb1bd167ab07cf3c7d96ad1b488516024da1212cafbc579e32b966a6\",\n      \"adapter\": \"6eb37e9f8018ff98a6d4546f707de17cb64b53038a6d7311bf7ba89ab79e24bf\"\n    },\n    \"consumed_byte_lengths\": {\n      \"receipts\": 1074\n    },\n    \"per_record\": [\n      {\n        \"row_index\": 1,\n        \"byte_start\": 0,\n        \"byte_end\": 1074,\n        \"raw_row_sha256\": \"f3ba0432cb1bd167ab07cf3c7d96ad1b488516024da1212cafbc579e32b966a6\",\n        \"consumed_receipts_sha256\": \"f3ba0432cb1bd167ab07cf3c7d96ad1b488516024da1212cafbc579e32b966a6\",\n        \"native_checks\": {\n          \"canonical_input_hash\": \"PASS\",\n          \"verdict_hash\": \"PASS\",\n          \"receipt_hash\": \"PASS\",\n          \"previous_receipt_link\": \"PASS\",\n          \"diagnostics\": {\n            \"status\": \"source-claims-nonbinding\",\n            \"reasons\": [],\n            \"computed_hashes\": {\n              \"canonical_input_hash\": \"99767eafb8dcf87b9e5ea50a56e6bde04182ffafb3ed7a58ddb271b38fc12c6e\",\n              \"verdict_hash\": \"5b7d5e8e78584a524ab87c318d526bf20e94cf22c8f63bfd67617f65bfc1ee9f\",\n              \"receipt_hash\": \"8c3ac411a1d763b11bc61a4d1264a9816c530ab429981c6094d0092044ac783d\"\n            }\n          }\n        }\n      }\n    ],\n    \"trust_class\": \"UNSIGNED\",\n    \"authenticity\": \"NOT_CLAIMED\",\n    \"origin\": \"NOT_CLAIMED\",\n    \"problems\": []\n  },\n  \"scoring\": {\n    \"status\": \"UNSUPPORTED\",\n    \"reason\": \"HISTORICAL_MEASUREMENT_INPUTS_MISSING\"\n  },\n  \"signature_verified\": false,\n  \"authenticity\": \"NOT_ESTABLISHED\",\n  \"complete_workflow\": \"NOT_ESTABLISHED\",\n  \"independent_population\": \"NOT_ESTABLISHED\",\n  \"predecessor_provenance\": \"CALLER_SUPPLIED_NOT_AUTHENTICATED_BY_THIS_CHECK\",\n  \"coverage\": \"ONLY_SUPPLIED_ROWS_NOT_ORIGINAL_ACTION_POPULATION\"\n}",
+   "tool": "telos_verify_native_receipts"
+  },
+  {
+   "arguments": {
+    "expected_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "receipts_base64": "eyJhcGlfcmVxdWVzdF9pZCI6ImRlbW8tcmVxdWVzdCIsImFyZ3MiOnsicGF0aCI6ImZpeHR1cmUudHh0In0sImNhbm9uaWNhbF9pbnB1dF9oYXNoIjoiOTk3NjdlYWZiOGRjZjg3YjllNWVhNTBhNTZlNmJkZTA0MTgyZmZhZmIzZWQ3YTU4ZGRiMjcxYjM4ZmMxMmM2ZSIsImNsYXNzaWZpY2F0aW9uIjp7ImFjdGlvbl90ZXh0IjoiUmVhZCBzeW50aGV0aWMgZml4dHVyZSIsImlzX2Nyb3NzX2dyb3VwIjpmYWxzZSwicmlza190aWVyIjoibG93IiwidG9vbF9ncm91cCI6ImZpbGVzeXN0ZW0ifSwiY29uZmlnX2hhc2giOiIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyIiwicGFfaGFzaCI6IjExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTEiLCJwcmV2aW91c19yZWNlaXB0X2hhc2giOiIwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwIiwicHJvZmlsZV9pZCI6ImRlbW8tcHJvZmlsZSIsInJlY2VpcHRfaGFzaCI6IjhjM2FjNDExYTFkNzYzYjExYmM2MWE0ZDEyNjRhOTgxNmM1MzBhYjQyOTk4MWM2MDk0ZDAwOTIwNDRhYzc4M2QiLCJzY2hlbWFfdmVyc2lvbiI6InRlbG9zLm9wZXJhdGlvbmFsLnRvb2xfY2FsbC52MiIsInNjb3Jlcl9tb2RlbF9oYXNoIjoiMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMyIsInNjb3Jlcl92ZXJzaW9uIjoic3ludGhldGljLWZpeHR1cmUiLCJzZXNzaW9uX2lkIjoiZGVtby1zZXNzaW9uIiwidGFza19pZCI6ImRlbW8tdGFzayIsInRvb2xfY2FsbF9pZCI6ImRlbW8tY2FsbCIsInRvb2xfbmFtZSI6InJlYWRfZmlsZSIsInR1cm5faWQiOiJkZW1vLXR1cm4iLCJ2ZXJkaWN0Ijp7ImRlY2lzaW9uIjoiRVhFQ1VURSIsInNjb3JlIjowLjV9LCJ2ZXJkaWN0X2hhc2giOiI1YjdkNWU4ZTc4NTg0YTUyNGFiODdjMzE4ZDUyNmJmMjBlOTRjZjIyYzhmNjNiZmQ2NzYxN2Y2NWJmYzFlZTlmIiwidmVyc2lvbiI6Mn0K",
+    "start_previous": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   "label": "native: wrong pin",
+   "structured": {
+    "activity": "RETROSPECTIVE_RECOMPUTATION_OF_RETAINED_HASHES_NOT_SCORES",
+    "authenticity": "NOT_ESTABLISHED",
+    "complete_workflow": "NOT_ESTABLISHED",
+    "coverage": "ONLY_SUPPLIED_ROWS_NOT_ORIGINAL_ACTION_POPULATION",
+    "independent_population": "NOT_ESTABLISHED",
+    "native_report": {
+     "authenticity": "NOT_CLAIMED",
+     "consumed": {
+      "adapter": "6eb37e9f8018ff98a6d4546f707de17cb64b53038a6d7311bf7ba89ab79e24bf",
+      "receipts": "f3ba0432cb1bd167ab07cf3c7d96ad1b488516024da1212cafbc579e32b966a6"
+     },
+     "consumed_byte_lengths": {
+      "receipts": 1074
+     },
+     "integrity_status": "FAIL",
+     "origin": "NOT_CLAIMED",
+     "per_record": [],
+     "problems": [
+      {
+       "code": "RECEIPTS_PIN_MISMATCH",
+       "row_index_or_null": null
+      }
+     ],
+     "report_version": "verify.native_v2.integrity.v1",
+     "trust_class": "UNKNOWN"
+    },
+    "predecessor_provenance": "CALLER_SUPPLIED_NOT_AUTHENTICATED_BY_THIS_CHECK",
+    "problems": [
+     "RECEIPTS_PIN_MISMATCH"
+    ],
+    "receipt_sdk_version": "0.1.1",
+    "scope": "NATIVE_BYTE_INTEGRITY_ONLY",
+    "scoring": {
+     "reason": "HISTORICAL_MEASUREMENT_INPUTS_MISSING",
+     "status": "UNSUPPORTED"
+    },
+    "signature_verified": false,
+    "status": "FAIL"
+   },
+   "text": "{\n  \"receipt_sdk_version\": \"0.1.1\",\n  \"scope\": \"NATIVE_BYTE_INTEGRITY_ONLY\",\n  \"activity\": \"RETROSPECTIVE_RECOMPUTATION_OF_RETAINED_HASHES_NOT_SCORES\",\n  \"status\": \"FAIL\",\n  \"problems\": [\n    \"RECEIPTS_PIN_MISMATCH\"\n  ],\n  \"native_report\": {\n    \"report_version\": \"verify.native_v2.integrity.v1\",\n    \"integrity_status\": \"FAIL\",\n    \"consumed\": {\n      \"receipts\": \"f3ba0432cb1bd167ab07cf3c7d96ad1b488516024da1212cafbc579e32b966a6\",\n      \"adapter\": \"6eb37e9f8018ff98a6d4546f707de17cb64b53038a6d7311bf7ba89ab79e24bf\"\n    },\n    \"consumed_byte_lengths\": {\n      \"receipts\": 1074\n    },\n    \"per_record\": [],\n    \"trust_class\": \"UNKNOWN\",\n    \"authenticity\": \"NOT_CLAIMED\",\n    \"origin\": \"NOT_CLAIMED\",\n    \"problems\": [\n      {\n        \"code\": \"RECEIPTS_PIN_MISMATCH\",\n        \"row_index_or_null\": null\n      }\n    ]\n  },\n  \"scoring\": {\n    \"status\": \"UNSUPPORTED\",\n    \"reason\": \"HISTORICAL_MEASUREMENT_INPUTS_MISSING\"\n  },\n  \"signature_verified\": false,\n  \"authenticity\": \"NOT_ESTABLISHED\",\n  \"complete_workflow\": \"NOT_ESTABLISHED\",\n  \"independent_population\": \"NOT_ESTABLISHED\",\n  \"predecessor_provenance\": \"CALLER_SUPPLIED_NOT_AUTHENTICATED_BY_THIS_CHECK\",\n  \"coverage\": \"ONLY_SUPPLIED_ROWS_NOT_ORIGINAL_ACTION_POPULATION\"\n}",
+   "tool": "telos_verify_native_receipts"
+  },
+  {
+   "arguments": {
+    "action_name": "synthetic_test_only",
+    "action_params": {
+     "path": "fixture.txt"
+    },
+    "agent_id": "synthetic-agent"
+   },
+   "label": "score: the synthetic action",
+   "structured": {
+    "action_name": "synthetic_test_only",
+    "agent_id": "synthetic-agent",
+    "composite_score": 0.4454,
+    "engine": "telos-mcp v0.1 stub (governance engine not wired; unsigned integrity-hash)",
+    "receipt": {
+     "agent_id": "synthetic-agent",
+     "covered_fields": "payload (canonical JSON, sort_keys, compact separators)",
+     "engine": "telos-mcp v0.1 stub (governance engine not wired; unsigned integrity-hash)",
+     "integrity_hash": "sha256:0222b4f5a5de3d21c32f4e9213882ebe70b0cd0fdf9fcfd8de7ae20a6246b47e",
+     "issued_at": "2026-01-01T00:00:00+00:00",
+     "kind": "action_governed",
+     "payload": {
+      "action_name": "synthetic_test_only",
+      "action_params_hash": "sha256:afc898c5b726db20d25caf5e4691495aab6e303fb29dea12630dbabe2cdb4266",
+      "composite_score": 0.4454,
+      "pa_id": "pa::synthetic-agent::v1",
+      "scores": {
+       "boundary": 0.5267,
+       "chain": 0.4064,
+       "purpose": 0.259,
+       "scope": 0.4928,
+       "tool": 0.5419
+      },
+      "verdict": "ESCALATE"
+     },
+     "receipt_version": "telos/0.1-unsigned",
+     "signature": null,
+     "signing_status": "unsigned_integrity_hash"
+    },
+    "scores": {
+     "boundary": 0.5267,
+     "chain": 0.4064,
+     "purpose": 0.259,
+     "scope": 0.4928,
+     "tool": 0.5419
+    },
+    "stub": true,
+    "verdict": "ESCALATE"
+   },
+   "text": "{\n  \"verdict\": \"ESCALATE\",\n  \"composite_score\": 0.4454,\n  \"scores\": {\n    \"purpose\": 0.259,\n    \"scope\": 0.4928,\n    \"boundary\": 0.5267,\n    \"tool\": 0.5419,\n    \"chain\": 0.4064\n  },\n  \"agent_id\": \"synthetic-agent\",\n  \"action_name\": \"synthetic_test_only\",\n  \"receipt\": {\n    \"receipt_version\": \"telos/0.1-unsigned\",\n    \"kind\": \"action_governed\",\n    \"agent_id\": \"synthetic-agent\",\n    \"payload\": {\n      \"action_name\": \"synthetic_test_only\",\n      \"action_params_hash\": \"sha256:afc898c5b726db20d25caf5e4691495aab6e303fb29dea12630dbabe2cdb4266\",\n      \"verdict\": \"ESCALATE\",\n      \"composite_score\": 0.4454,\n      \"scores\": {\n        \"purpose\": 0.259,\n        \"scope\": 0.4928,\n        \"boundary\": 0.5267,\n        \"tool\": 0.5419,\n        \"chain\": 0.4064\n      },\n      \"pa_id\": \"pa::synthetic-agent::v1\"\n    },\n    \"issued_at\": \"2026-01-01T00:00:00+00:00\",\n    \"integrity_hash\": \"sha256:0222b4f5a5de3d21c32f4e9213882ebe70b0cd0fdf9fcfd8de7ae20a6246b47e\",\n    \"covered_fields\": \"payload (canonical JSON, sort_keys, compact separators)\",\n    \"signing_status\": \"unsigned_integrity_hash\",\n    \"signature\": null,\n    \"engine\": \"telos-mcp v0.1 stub (governance engine not wired; unsigned integrity-hash)\"\n  },\n  \"stub\": true,\n  \"engine\": \"telos-mcp v0.1 stub (governance engine not wired; unsigned integrity-hash)\"\n}",
+   "tool": "telos_score"
+  },
+  {
+   "arguments": {
+    "action_name": "synthetic_test_only",
+    "action_params": {},
+    "agent_id": "synthetic-agent"
+   },
+   "label": "score: empty params",
+   "structured": {
+    "action_name": "synthetic_test_only",
+    "agent_id": "synthetic-agent",
+    "composite_score": 0.3488,
+    "engine": "telos-mcp v0.1 stub (governance engine not wired; unsigned integrity-hash)",
+    "receipt": {
+     "agent_id": "synthetic-agent",
+     "covered_fields": "payload (canonical JSON, sort_keys, compact separators)",
+     "engine": "telos-mcp v0.1 stub (governance engine not wired; unsigned integrity-hash)",
+     "integrity_hash": "sha256:21e9339d7f1fa8f004031bb65fd6be98e6e912e34e4e4333fbd895d1afbb401f",
+     "issued_at": "2026-01-01T00:00:00+00:00",
+     "kind": "action_governed",
+     "payload": {
+      "action_name": "synthetic_test_only",
+      "action_params_hash": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "composite_score": 0.3488,
+      "pa_id": "pa::synthetic-agent::v1",
+      "scores": {
+       "boundary": 0.3166,
+       "chain": 0.5436,
+       "purpose": 0.486,
+       "scope": 0.242,
+       "tool": 0.1556
+      },
+      "verdict": "EXECUTE"
+     },
+     "receipt_version": "telos/0.1-unsigned",
+     "signature": null,
+     "signing_status": "unsigned_integrity_hash"
+    },
+    "scores": {
+     "boundary": 0.3166,
+     "chain": 0.5436,
+     "purpose": 0.486,
+     "scope": 0.242,
+     "tool": 0.1556
+    },
+    "stub": true,
+    "verdict": "EXECUTE"
+   },
+   "text": "{\n  \"verdict\": \"EXECUTE\",\n  \"composite_score\": 0.3488,\n  \"scores\": {\n    \"purpose\": 0.486,\n    \"scope\": 0.242,\n    \"boundary\": 0.3166,\n    \"tool\": 0.1556,\n    \"chain\": 0.5436\n  },\n  \"agent_id\": \"synthetic-agent\",\n  \"action_name\": \"synthetic_test_only\",\n  \"receipt\": {\n    \"receipt_version\": \"telos/0.1-unsigned\",\n    \"kind\": \"action_governed\",\n    \"agent_id\": \"synthetic-agent\",\n    \"payload\": {\n      \"action_name\": \"synthetic_test_only\",\n      \"action_params_hash\": \"sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a\",\n      \"verdict\": \"EXECUTE\",\n      \"composite_score\": 0.3488,\n      \"scores\": {\n        \"purpose\": 0.486,\n        \"scope\": 0.242,\n        \"boundary\": 0.3166,\n        \"tool\": 0.1556,\n        \"chain\": 0.5436\n      },\n      \"pa_id\": \"pa::synthetic-agent::v1\"\n    },\n    \"issued_at\": \"2026-01-01T00:00:00+00:00\",\n    \"integrity_hash\": \"sha256:21e9339d7f1fa8f004031bb65fd6be98e6e912e34e4e4333fbd895d1afbb401f\",\n    \"covered_fields\": \"payload (canonical JSON, sort_keys, compact separators)\",\n    \"signing_status\": \"unsigned_integrity_hash\",\n    \"signature\": null,\n    \"engine\": \"telos-mcp v0.1 stub (governance engine not wired; unsigned integrity-hash)\"\n  },\n  \"stub\": true,\n  \"engine\": \"telos-mcp v0.1 stub (governance engine not wired; unsigned integrity-hash)\"\n}",
+   "tool": "telos_score"
+  },
+  {
+   "arguments": {
+    "receipt_json": "{\"receipt_version\": \"telos/0.1-unsigned\", \"kind\": \"synthetic\", \"agent_id\": \"demo-agent\", \"payload\": {\"v\": 1}, \"issued_at\": \"2026-01-01T00:00:00+00:00\", \"integrity_hash\": \"sha256:afbf9d0f3560b0fd7795e81c42a0a79ee6b6fc67e064f77826aee642cad28d91\", \"covered_fields\": \"payload (canonical JSON, sort_keys, compact separators)\", \"signing_status\": \"unsigned_integrity_hash\", \"signature\": null, \"engine\": \"telos v0.1 (unsigned integrity-hash; no governance engine wired)\"}"
+   },
+   "label": "verify: JSON string",
+   "structured": {
+    "covered_fields": "payload (canonical JSON, sort_keys, compact separators)",
+    "match": true,
+    "note": "integrity hash is key-free; it confirms the payload matches the recorded hash, not who issued it or when",
+    "reason": "payload matches the recorded integrity_hash (not altered relative to the hash)",
+    "recomputed_integrity_hash": "sha256:afbf9d0f3560b0fd7795e81c42a0a79ee6b6fc67e064f77826aee642cad28d91",
+    "signature_verified": false,
+    "signing_status": "unsigned_integrity_hash",
+    "stated_integrity_hash": "sha256:afbf9d0f3560b0fd7795e81c42a0a79ee6b6fc67e064f77826aee642cad28d91"
+   },
+   "text": "{\n  \"match\": true,\n  \"stated_integrity_hash\": \"sha256:afbf9d0f3560b0fd7795e81c42a0a79ee6b6fc67e064f77826aee642cad28d91\",\n  \"recomputed_integrity_hash\": \"sha256:afbf9d0f3560b0fd7795e81c42a0a79ee6b6fc67e064f77826aee642cad28d91\",\n  \"covered_fields\": \"payload (canonical JSON, sort_keys, compact separators)\",\n  \"signature_verified\": false,\n  \"signing_status\": \"unsigned_integrity_hash\",\n  \"note\": \"integrity hash is key-free; it confirms the payload matches the recorded hash, not who issued it or when\",\n  \"reason\": \"payload matches the recorded integrity_hash (not altered relative to the hash)\"\n}",
+   "tool": "telos_verify"
+  },
+  {
+   "arguments": {
+    "receipt_json": {
+     "agent_id": "demo-agent",
+     "covered_fields": "payload (canonical JSON, sort_keys, compact separators)",
+     "engine": "telos v0.1 (unsigned integrity-hash; no governance engine wired)",
+     "integrity_hash": "sha256:afbf9d0f3560b0fd7795e81c42a0a79ee6b6fc67e064f77826aee642cad28d91",
+     "issued_at": "2026-01-01T00:00:00+00:00",
+     "kind": "synthetic",
+     "payload": {
+      "v": 1
+     },
+     "receipt_version": "telos/0.1-unsigned",
+     "signature": null,
+     "signing_status": "unsigned_integrity_hash"
+    }
+   },
+   "label": "verify: JSON object",
+   "structured": {
+    "covered_fields": "payload (canonical JSON, sort_keys, compact separators)",
+    "match": true,
+    "note": "integrity hash is key-free; it confirms the payload matches the recorded hash, not who issued it or when",
+    "reason": "payload matches the recorded integrity_hash (not altered relative to the hash)",
+    "recomputed_integrity_hash": "sha256:afbf9d0f3560b0fd7795e81c42a0a79ee6b6fc67e064f77826aee642cad28d91",
+    "signature_verified": false,
+    "signing_status": "unsigned_integrity_hash",
+    "stated_integrity_hash": "sha256:afbf9d0f3560b0fd7795e81c42a0a79ee6b6fc67e064f77826aee642cad28d91"
+   },
+   "text": "{\n  \"match\": true,\n  \"stated_integrity_hash\": \"sha256:afbf9d0f3560b0fd7795e81c42a0a79ee6b6fc67e064f77826aee642cad28d91\",\n  \"recomputed_integrity_hash\": \"sha256:afbf9d0f3560b0fd7795e81c42a0a79ee6b6fc67e064f77826aee642cad28d91\",\n  \"covered_fields\": \"payload (canonical JSON, sort_keys, compact separators)\",\n  \"signature_verified\": false,\n  \"signing_status\": \"unsigned_integrity_hash\",\n  \"note\": \"integrity hash is key-free; it confirms the payload matches the recorded hash, not who issued it or when\",\n  \"reason\": \"payload matches the recorded integrity_hash (not altered relative to the hash)\"\n}",
+   "tool": "telos_verify"
+  },
+  {
+   "arguments": {
+    "receipt_json": "{\"receipt_version\": \"telos/0.1-unsigned\", \"kind\": \"synthetic\", \"agent_id\": \"demo-agent\", \"payload\": {\"v\": 2}, \"issued_at\": \"2026-01-01T00:00:00+00:00\", \"integrity_hash\": \"sha256:afbf9d0f3560b0fd7795e81c42a0a79ee6b6fc67e064f77826aee642cad28d91\", \"covered_fields\": \"payload (canonical JSON, sort_keys, compact separators)\", \"signing_status\": \"unsigned_integrity_hash\", \"signature\": null, \"engine\": \"telos v0.1 (unsigned integrity-hash; no governance engine wired)\"}"
+   },
+   "label": "verify: tampered payload",
+   "structured": {
+    "covered_fields": "payload (canonical JSON, sort_keys, compact separators)",
+    "match": false,
+    "note": "integrity hash is key-free; it confirms the payload matches the recorded hash, not who issued it or when",
+    "reason": "MISMATCH: recomputed hash differs from stated integrity_hash (payload was altered)",
+    "recomputed_integrity_hash": "sha256:2b5442799fccc3af2e7e790017697373913b7afcac933d72fb5876de994f659a",
+    "signature_verified": false,
+    "signing_status": "unsigned_integrity_hash",
+    "stated_integrity_hash": "sha256:afbf9d0f3560b0fd7795e81c42a0a79ee6b6fc67e064f77826aee642cad28d91"
+   },
+   "text": "{\n  \"match\": false,\n  \"stated_integrity_hash\": \"sha256:afbf9d0f3560b0fd7795e81c42a0a79ee6b6fc67e064f77826aee642cad28d91\",\n  \"recomputed_integrity_hash\": \"sha256:2b5442799fccc3af2e7e790017697373913b7afcac933d72fb5876de994f659a\",\n  \"covered_fields\": \"payload (canonical JSON, sort_keys, compact separators)\",\n  \"signature_verified\": false,\n  \"signing_status\": \"unsigned_integrity_hash\",\n  \"note\": \"integrity hash is key-free; it confirms the payload matches the recorded hash, not who issued it or when\",\n  \"reason\": \"MISMATCH: recomputed hash differs from stated integrity_hash (payload was altered)\"\n}",
+   "tool": "telos_verify"
+  },
+  {
+   "arguments": {
+    "receipt_json": "not json"
+   },
+   "label": "verify: not JSON",
+   "structured": {
+    "covered_fields": "payload (canonical JSON, sort_keys, compact separators)",
+    "match": false,
+    "note": "integrity hash is key-free; it confirms the payload matches the recorded hash, not who issued it or when",
+    "reason": "receipt is not a JSON object",
+    "recomputed_integrity_hash": null,
+    "signature_verified": false,
+    "signing_status": "unsigned_integrity_hash",
+    "stated_integrity_hash": null
+   },
+   "text": "{\n  \"match\": false,\n  \"stated_integrity_hash\": null,\n  \"recomputed_integrity_hash\": null,\n  \"covered_fields\": \"payload (canonical JSON, sort_keys, compact separators)\",\n  \"signature_verified\": false,\n  \"signing_status\": \"unsigned_integrity_hash\",\n  \"note\": \"integrity hash is key-free; it confirms the payload matches the recorded hash, not who issued it or when\",\n  \"reason\": \"receipt is not a JSON object\"\n}",
+   "tool": "telos_verify"
+  },
+  {
+   "arguments": {
+    "agent_id": "synthetic-agent"
+   },
+   "label": "get_pa",
+   "structured": {
+    "agent_id": "synthetic-agent",
+    "allowed_tools": [
+     "telos_score",
+     "telos_verify",
+     "telos_get_pa",
+     "telos_audit",
+     "telos_replay"
+    ],
+    "boundaries": [
+     "no production system mutation",
+     "no PII egress",
+     "no execution of unsigned tool calls"
+    ],
+    "centroid_dimensions": [
+     "purpose",
+     "scope",
+     "boundary",
+     "tool",
+     "chain"
+    ],
+    "compiled_at": "2026-01-01T00:00:00+00:00",
+    "pa_id": "pa::synthetic-agent::v1",
+    "purpose": "Demonstrate TELOS governance via MCP (stub PA).",
+    "scope": [
+     "telos-mcp scaffold",
+     "MCP client integration"
+    ],
+    "stub": true
+   },
+   "text": "{\n  \"agent_id\": \"synthetic-agent\",\n  \"pa_id\": \"pa::synthetic-agent::v1\",\n  \"purpose\": \"Demonstrate TELOS governance via MCP (stub PA).\",\n  \"boundaries\": [\n    \"no production system mutation\",\n    \"no PII egress\",\n    \"no execution of unsigned tool calls\"\n  ],\n  \"scope\": [\n    \"telos-mcp scaffold\",\n    \"MCP client integration\"\n  ],\n  \"allowed_tools\": [\n    \"telos_score\",\n    \"telos_verify\",\n    \"telos_get_pa\",\n    \"telos_audit\",\n    \"telos_replay\"\n  ],\n  \"centroid_dimensions\": [\n    \"purpose\",\n    \"scope\",\n    \"boundary\",\n    \"tool\",\n    \"chain\"\n  ],\n  \"compiled_at\": \"2026-01-01T00:00:00+00:00\",\n  \"stub\": true\n}",
+   "tool": "telos_get_pa"
+  },
+  {
+   "arguments": {
+    "end_iso": "2026-04-26T00:00:00Z",
+    "start_iso": "2026-04-25T00:00:00Z"
+   },
+   "label": "audit: one day",
+   "structured": {
+    "capped": false,
+    "count": 3,
+    "entries": [
+     {
+      "action_name": "read_file",
+      "agent_id": "stub-agent",
+      "id": "audit::0f393e13e051c19c",
+      "previous_id": null,
+      "timestamp": "2026-04-25T06:00:00+00:00",
+      "tkey_fingerprint": "stub:0000000000000000",
+      "verdict": "EXECUTE"
+     },
+     {
+      "action_name": "post_message",
+      "agent_id": "stub-agent",
+      "id": "audit::959d0f41ecaaa73b",
+      "previous_id": "audit::0f393e13e051c19c",
+      "timestamp": "2026-04-25T12:00:00+00:00",
+      "tkey_fingerprint": "stub:0000000000000000",
+      "verdict": "CLARIFY"
+     },
+     {
+      "action_name": "write_file",
+      "agent_id": "stub-agent",
+      "id": "audit::0f23f5a45ae93ace",
+      "previous_id": "audit::959d0f41ecaaa73b",
+      "timestamp": "2026-04-25T18:00:00+00:00",
+      "tkey_fingerprint": "stub:0000000000000000",
+      "verdict": "ESCALATE"
+     }
+    ],
+    "window": {
+     "end": "2026-04-26T00:00:00Z",
+     "start": "2026-04-25T00:00:00Z"
+    }
+   },
+   "text": "{\n  \"entries\": [\n    {\n      \"id\": \"audit::0f393e13e051c19c\",\n      \"timestamp\": \"2026-04-25T06:00:00+00:00\",\n      \"verdict\": \"EXECUTE\",\n      \"agent_id\": \"stub-agent\",\n      \"action_name\": \"read_file\",\n      \"previous_id\": null,\n      \"tkey_fingerprint\": \"stub:0000000000000000\"\n    },\n    {\n      \"id\": \"audit::959d0f41ecaaa73b\",\n      \"timestamp\": \"2026-04-25T12:00:00+00:00\",\n      \"verdict\": \"CLARIFY\",\n      \"agent_id\": \"stub-agent\",\n      \"action_name\": \"post_message\",\n      \"previous_id\": \"audit::0f393e13e051c19c\",\n      \"tkey_fingerprint\": \"stub:0000000000000000\"\n    },\n    {\n      \"id\": \"audit::0f23f5a45ae93ace\",\n      \"timestamp\": \"2026-04-25T18:00:00+00:00\",\n      \"verdict\": \"ESCALATE\",\n      \"agent_id\": \"stub-agent\",\n      \"action_name\": \"write_file\",\n      \"previous_id\": \"audit::959d0f41ecaaa73b\",\n      \"tkey_fingerprint\": \"stub:0000000000000000\"\n    }\n  ],\n  \"count\": 3,\n  \"capped\": false,\n  \"window\": {\n    \"start\": \"2026-04-25T00:00:00Z\",\n    \"end\": \"2026-04-26T00:00:00Z\"\n  }\n}",
+   "tool": "telos_audit"
+  },
+  {
+   "arguments": {
+    "end_iso": "2026-04-25T00:00:00Z",
+    "start_iso": "2026-04-26T00:00:00Z"
+   },
+   "label": "audit: empty window",
+   "structured": {
+    "capped": false,
+    "count": 0,
+    "entries": [],
+    "window": {
+     "end": "2026-04-25T00:00:00Z",
+     "start": "2026-04-26T00:00:00Z"
+    }
+   },
+   "text": "{\n  \"entries\": [],\n  \"count\": 0,\n  \"capped\": false,\n  \"window\": {\n    \"start\": \"2026-04-26T00:00:00Z\",\n    \"end\": \"2026-04-25T00:00:00Z\"\n  }\n}",
+   "tool": "telos_audit"
+  },
+  {
+   "arguments": {
+    "alt_config_path": "alt.yaml",
+    "receipt_id": "rcpt-synthetic"
+   },
+   "label": "replay",
+   "structured": {
+    "alt_config_path": "alt.yaml",
+    "estimated_runtime_seconds": 12,
+    "job_id": "ccrs::cf4f1a9a0418cda86b88",
+    "queued_at": "2026-01-01T00:00:00+00:00",
+    "receipt_id": "rcpt-synthetic",
+    "result_uri": "telos://replay/ccrs::cf4f1a9a0418cda86b88",
+    "status": "queued",
+    "stub": true
+   },
+   "text": "{\n  \"job_id\": \"ccrs::cf4f1a9a0418cda86b88\",\n  \"receipt_id\": \"rcpt-synthetic\",\n  \"alt_config_path\": \"alt.yaml\",\n  \"status\": \"queued\",\n  \"queued_at\": \"2026-01-01T00:00:00+00:00\",\n  \"estimated_runtime_seconds\": 12,\n  \"result_uri\": \"telos://replay/ccrs::cf4f1a9a0418cda86b88\",\n  \"stub\": true\n}",
+   "tool": "telos_replay"
+  }
+ ],
+ "frozen_clock": "2026-01-01T00:00:00+00:00",
+ "made_with": {
+  "mcp": "1.26.0",
+  "pydantic": "2.12.5"
+ },
+ "tools": {
+  "telos_audit": {
+   "description": "Return audit chain entries within a time window.\n\n    Capped at 100 entries to keep MCP payloads bounded. For deeper queries,\n    use the `telos://audit/{date}` resource per-day.\n\n    Args:\n        start_iso: ISO-8601 window start (e.g. \"2026-04-25T00:00:00Z\").\n        end_iso: ISO-8601 window end (must be later than start).\n\n    Returns:\n        Dict with keys: entries (list, max 100), count, capped (bool),\n        window {start, end}.\n    ",
+   "inputSchema": {
+    "properties": {
+     "end_iso": {
+      "title": "End Iso",
+      "type": "string"
+     },
+     "start_iso": {
+      "title": "Start Iso",
+      "type": "string"
+     }
+    },
+    "required": [
+     "start_iso",
+     "end_iso"
+    ],
+    "title": "telos_auditArguments",
+    "type": "object"
+   },
+   "name": "telos_audit",
+   "outputSchema": {
+    "additionalProperties": true,
+    "title": "telos_auditDictOutput",
+    "type": "object"
+   }
+  },
+  "telos_get_pa": {
+   "description": "Return the active Purpose Anchor for an agent.\n\n    The PA is the governance contract: purpose statement, hard boundaries,\n    declared scope, allowed tool list, and the centroid dimensions used to\n    score the agent's actions.\n\n    Args:\n        agent_id: Stable identifier of the agent whose PA to load.\n\n    Returns:\n        Dict with keys: agent_id, pa_id, purpose, boundaries, scope,\n        allowed_tools, centroid_dimensions, compiled_at, stub.\n    ",
+   "inputSchema": {
+    "properties": {
+     "agent_id": {
+      "title": "Agent Id",
+      "type": "string"
+     }
+    },
+    "required": [
+     "agent_id"
+    ],
+    "title": "telos_get_paArguments",
+    "type": "object"
+   },
+   "name": "telos_get_pa",
+   "outputSchema": {
+    "additionalProperties": true,
+    "title": "telos_get_paDictOutput",
+    "type": "object"
+   }
+  },
+  "telos_replay": {
+   "description": "Queue a CCRS counterfactual replay against an alternate config.\n\n    CCRS Mode C re-runs the lifecycle that produced `receipt_id` under a\n    different governance configuration (alt thresholds, alt centroids,\n    alt PA) and reports verdict deltas. Returns immediately with a job id;\n    poll the result via `telos://replay/{job_id}` once available.\n\n    Args:\n        receipt_id: ID of the receipt to replay against.\n        alt_config_path: Path to the alternate config (YAML) to apply.\n\n    Returns:\n        Dict with keys: job_id, receipt_id, alt_config_path, status,\n        queued_at, estimated_runtime_seconds, result_uri, stub.\n    ",
+   "inputSchema": {
+    "properties": {
+     "alt_config_path": {
+      "title": "Alt Config Path",
+      "type": "string"
+     },
+     "receipt_id": {
+      "title": "Receipt Id",
+      "type": "string"
+     }
+    },
+    "required": [
+     "receipt_id",
+     "alt_config_path"
+    ],
+    "title": "telos_replayArguments",
+    "type": "object"
+   },
+   "name": "telos_replay",
+   "outputSchema": {
+    "additionalProperties": true,
+    "title": "telos_replayDictOutput",
+    "type": "object"
+   }
+  },
+  "telos_score": {
+   "description": "Score a proposed agent action against the active Purpose Anchor.\n\n    Returns a verdict (EXECUTE / CLARIFY / ESCALATE) plus a 5-dimension\n    score breakdown across purpose, scope, boundary, tool, and chain.\n    Each call also mints an unsigned integrity-hash\n    receipt (shared telos-receipt envelope) that `telos_verify` -- and the\n    telos-trust-surface -- can verify with no translation.\n\n    Args:\n        action_name: Name of the action being proposed (e.g. \"write_file\").\n        action_params: Parameter dict the agent intends to pass to the action.\n        agent_id: Stable identifier of the agent proposing the action.\n\n    Returns:\n        Dict with keys: verdict, composite_score, scores, agent_id,\n        action_name, receipt, stub, engine.\n    ",
+   "inputSchema": {
+    "properties": {
+     "action_name": {
+      "title": "Action Name",
+      "type": "string"
+     },
+     "action_params": {
+      "additionalProperties": true,
+      "title": "Action Params",
+      "type": "object"
+     },
+     "agent_id": {
+      "title": "Agent Id",
+      "type": "string"
+     }
+    },
+    "required": [
+     "action_name",
+     "action_params",
+     "agent_id"
+    ],
+    "title": "telos_scoreArguments",
+    "type": "object"
+   },
+   "name": "telos_score",
+   "outputSchema": {
+    "additionalProperties": true,
+    "title": "telos_scoreDictOutput",
+    "type": "object"
+   }
+  },
+  "telos_verify": {
+   "description": "Verify an unsigned integrity-hash receipt offline.\n\n    Recomputes the receipt's integrity hash over its canonical payload using\n    the shared telos-receipt contract -- the same verifier the trust surface\n    runs -- so the answer matches end-to-end. Key-free; not a signature check.\n\n    Args:\n        receipt_json: The receipt to verify, either as a JSON string or as\n            a JSON object (clients may pass either; both are accepted).\n\n    Returns:\n        Dict with keys: match (bool), stated_integrity_hash,\n        recomputed_integrity_hash, covered_fields, signing_status, note, reason.\n    ",
+   "inputSchema": {
+    "properties": {
+     "receipt_json": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "additionalProperties": true,
+        "type": "object"
+       }
+      ],
+      "title": "Receipt Json"
+     }
+    },
+    "required": [
+     "receipt_json"
+    ],
+    "title": "telos_verifyArguments",
+    "type": "object"
+   },
+   "name": "telos_verify",
+   "outputSchema": {
+    "additionalProperties": true,
+    "title": "telos_verifyDictOutput",
+    "type": "object"
+   }
+  },
+  "telos_verify_native_receipts": {
+   "description": "Verify supplied native-v2 historical bytes through the actual receipt SDK.\n\n    Key-free integrity only. No scorer, signer, production file lookup or engine\n    dispatch. The existing telos_verify keeps its unsigned payload-envelope API.\n    ",
+   "inputSchema": {
+    "properties": {
+     "expected_sha256": {
+      "title": "Expected Sha256",
+      "type": "string"
+     },
+     "receipts_base64": {
+      "title": "Receipts Base64",
+      "type": "string"
+     },
+     "start_previous": {
+      "title": "Start Previous",
+      "type": "string"
+     }
+    },
+    "required": [
+     "receipts_base64",
+     "expected_sha256",
+     "start_previous"
+    ],
+    "title": "telos_verify_native_receiptsArguments",
+    "type": "object"
+   },
+   "name": "telos_verify_native_receipts",
+   "outputSchema": {
+    "additionalProperties": true,
+    "title": "telos_verify_native_receiptsDictOutput",
+    "type": "object"
+   }
+  }
+ }
+}
