@@ -30,7 +30,8 @@ mcp = FastMCP(
     name="telos-governance",
     instructions=(
         "TELOS governance server (stub engine). Score proposed agent actions, "
-        "verify receipts, inspect Purpose Anchors, query the audit chain, and "
+        "verify receipts, inspect a fixed synthetic Purpose Anchor, query the "
+        "audit chain, and "
         "request counterfactual replays (the stub engine runs no replay: nothing "
         "is queued, and telos_replay reports status stub_not_queued). Returns a "
         "verdict in {EXECUTE, CLARIFY, "
@@ -112,14 +113,14 @@ def telos_verify(receipt_json: str | dict[str, Any]) -> dict[str, Any]:
 
 @mcp.tool()
 def telos_get_pa(agent_id: str) -> dict[str, Any]:
-    """Return the active Purpose Anchor for an agent.
+    """Return a fixed synthetic Purpose Anchor for an agent.
 
-    The PA is the governance contract: purpose statement, hard boundaries,
-    declared scope, allowed tool list, and the centroid dimensions used to
-    score the agent's actions.
+    Stub: purpose statement, hard boundaries, declared scope, allowed tool
+    list, and centroid dimension names. Only agent_id, pa_id and compiled_at
+    vary. telos_score does not read it.
 
     Args:
-        agent_id: Stable identifier of the agent whose PA to load.
+        agent_id: Agent identifier placed in the synthetic PA.
 
     Returns:
         Dict with keys: agent_id, pa_id, purpose, boundaries, scope,

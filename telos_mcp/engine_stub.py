@@ -52,7 +52,11 @@ def _now_iso() -> str:
 # -- Tool: telos_score -----------------------------------------------------
 
 def score_action(action_name: str, action_params: dict[str, Any], agent_id: str) -> dict[str, Any]:
-    """Score a proposed action against the active Purpose Anchor.
+    """Return synthetic scores for a proposed action.
+
+    Scores are derived from the action name, parameters and agent ID; no
+    Purpose Anchor is consulted. The receipt carries a synthetic PA identifier
+    (`pa::<agent_id>::v1`).
 
     Mints an unsigned integrity-hash receipt (shared telos-receipt contract)
     committing to the governance result; telos-verify checks it unchanged.
@@ -124,9 +128,10 @@ def verify_receipt(receipt_json: str | dict[str, Any]) -> dict[str, Any]:
 # -- Tool: telos_get_pa ----------------------------------------------------
 
 def get_pa(agent_id: str) -> dict[str, Any]:
-    """Return the active Purpose Anchor (PA) for an agent.
+    """Return a fixed synthetic Purpose Anchor (PA) for an agent.
 
-    Stub: a fixed synthetic PA. The real engine's PA lookup replaces this.
+    Stub: only agent_id, pa_id and compiled_at vary. Scoring does not read it.
+    The real engine's PA lookup replaces this.
     """
     return {
         "agent_id": agent_id,

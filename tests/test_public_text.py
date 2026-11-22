@@ -246,3 +246,44 @@ def test_centroids_row_describes_fixture_metadata():
     assert "Compiled centroid metadata" not in row
     assert "fixture" in row.lower()
     assert "no compiled centroids are served" in row
+
+
+_ACTIVE_PA_CLAIM = re.compile(r"\bactive (Purpose Anchor|PA)\b|\bused to score\b", re.IGNORECASE)
+
+
+def _package_docstrings():
+    pkg = Path(server.__file__).parent
+    for path in sorted(pkg.glob("*.py")):
+        tree = ast.parse(path.read_text())
+        nodes = [tree] + [n for n in ast.walk(tree) if isinstance(
+            n, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef))]
+        for node in nodes:
+            doc = ast.get_docstring(node)
+            if doc:
+                yield f"{path.name}:{getattr(node, 'name', '<module>')}", _flat(doc)
+
+
+def _client_visible_text():
+    tools = asyncio.run(server.mcp.list_tools())
+    yield "instructions", _flat(server.mcp.instructions)
+    for tool in tools:
+        yield f"tool:{tool.name}", _flat(tool.description or "")
+
+
+def test_no_docstring_or_tool_description_claims_a_real_purpose_anchor():
+    sites = dict(_package_docstrings())
+    sites.update(_client_visible_text())
+    # Valid control beside the scan: the scan sees the stub's score and PA docs.
+    assert "engine_stub.py:score_action" in sites and "tool:telos_get_pa" in sites
+    hits = {name: m.group(0) for name, text in sites.items()
+            for m in [_PA_SCORING_CLAIM.search(text) or _ACTIVE_PA_CLAIM.search(text)] if m}
+    assert hits == {}
+
+
+def test_pa_text_says_the_purpose_anchor_is_fixed_and_synthetic():
+    sites = dict(_package_docstrings())
+    sites.update(_client_visible_text())
+    for name in ("instructions", "tool:telos_get_pa", "engine_stub.py:get_pa"):
+        assert "fixed synthetic Purpose Anchor" in sites[name], name
+    for name in ("tool:telos_score", "engine_stub.py:score_action"):
+        assert "no Purpose Anchor is consulted" in sites[name], name
