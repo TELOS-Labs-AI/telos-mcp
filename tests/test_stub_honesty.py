@@ -86,3 +86,69 @@ def test_readme_rows_match_stub_behaviour():
     assert "Queue a CCRS counterfactual replay" not in text
     assert "nothing is queued" in text.lower()
     assert "synthetic entries flagged `stub: true`" in text
+
+
+def test_server_instructions_say_replays_queue_nothing():
+    # Beside the tool's own response: what the server tells the client at
+    # initialization must agree with what telos_replay returns.
+    assert _structured("telos_replay", REPLAY)["status"] == "stub_not_queued"
+    text = " ".join(server.mcp.instructions.split())
+    assert "queue CCRS" not in text
+    assert "nothing is queued" in text.lower()
+
+
+def test_real_stdio_initialization_text_agrees_with_the_replay_response():
+    import os
+    import sys
+
+    from mcp import ClientSession, StdioServerParameters
+    from mcp.client.stdio import stdio_client
+
+    async def session_run():
+        params = StdioServerParameters(
+            command=sys.executable,
+            args=["-m", "telos_mcp.server"],
+            env={**os.environ, "TELOS_MCP_ENGINE": "stub", "PYTHONPATH": ""},
+        )
+        async with (
+            stdio_client(params, errlog=sys.stderr) as (read, write),
+            ClientSession(read, write) as session,
+        ):
+            init = await session.initialize()
+            replay = await session.call_tool("telos_replay", REPLAY)
+            return init.instructions, replay.structuredContent
+
+    instructions, replay = asyncio.run(asyncio.wait_for(session_run(), timeout=20))
+    assert replay["status"] == "stub_not_queued"
+    text = " ".join(instructions.split())
+    assert "queue CCRS" not in text
+    assert "nothing is queued" in text.lower()
+
+
+def _parse(ts):
+    from datetime import datetime
+
+    return datetime.fromisoformat(ts.replace("Z", "+00:00"))
+
+
+@pytest.mark.parametrize(
+    "start, end",
+    [
+        ("2026-04-25T00:00:00Z", "2026-04-26T00:00:00Z"),
+        ("2026-04-25T00:00:00.100Z", "2026-04-25T00:00:00.500Z"),
+        ("2026-04-25T00:00:59.900Z", "2026-04-25T00:01:00.300Z"),
+    ],
+    ids=["whole-seconds", "fraction-within-one-second", "fraction-across-a-second"],
+)
+def test_every_audit_entry_lies_inside_its_window(start, end):
+    entries = _structured("telos_audit", {"start_iso": start, "end_iso": end})["entries"]
+    assert len(entries) == 3
+    for entry in entries:
+        assert _parse(start) < _parse(entry["timestamp"]) < _parse(end), entry["timestamp"]
+
+
+def test_whole_second_windows_keep_whole_second_timestamps():
+    entries = _structured("telos_audit", WINDOW)["entries"]
+    assert [e["timestamp"] for e in entries] == [
+        "2026-04-25T06:00:00+00:00", "2026-04-25T12:00:00+00:00", "2026-04-25T18:00:00+00:00",
+    ]
