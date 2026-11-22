@@ -156,8 +156,11 @@ def get_pa(agent_id: str) -> dict[str, Any]:
 def audit_window(start_iso: str, end_iso: str, cap: int = 100) -> list[dict[str, Any]]:
     """Return synthetic audit-chain entries within a time window (capped).
 
-    Stub: three deterministic, invented entries, each flagged `stub: True`.
-    No audit store is read. The real engine's audit query replaces this.
+    Stub: up to three deterministic, invented entries at the window's quarter
+    points, each flagged `stub: True`, with every timestamp strictly inside the
+    window. Positions are whole microseconds; a window too narrow to hold three
+    distinct interior timestamps at that resolution returns fewer entries, or
+    none. No audit store is read. The real engine's audit query replaces this.
     """
     try:
         start = datetime.fromisoformat(start_iso.replace("Z", "+00:00"))
@@ -169,12 +172,20 @@ def audit_window(start_iso: str, end_iso: str, cap: int = 100) -> list[dict[str,
             return []
     except (ValueError, TypeError):
         return []
-    span = (end - start) / 4
+    # Integer microseconds, floored per position (no rounded quarter-span):
+    # total*k//4 for k <= 3 is always below total, so no position reaches the
+    # end. A position on the start, or repeating the previous one, is skipped.
+    total_us = (end - start) // timedelta(microseconds=1)
+    offsets: list[int] = []
+    for k in (1, 2, 3):
+        off = total_us * k // 4
+        if off > (offsets[-1] if offsets else 0):
+            offsets.append(off)
     entries: list[dict[str, Any]] = []
-    for i in range(min(3, cap)):
+    for i, off in enumerate(offsets[:cap]):
         # Default isoformat keeps the fraction when there is one, so a
         # sub-second window is not truncated to a timestamp before its start.
-        ts = (start + span * (i + 1)).isoformat()
+        ts = (start + timedelta(microseconds=off)).isoformat()
         entries.append({
             "id": f"audit::{_digest({'ts': ts, 'i': i})[:16]}",
             "timestamp": ts,
