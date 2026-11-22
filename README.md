@@ -29,7 +29,7 @@ can call them as native tools.
 
 | Tool | Purpose |
 |------|---------|
-| `telos_score(action_name, action_params, agent_id)` | Return synthetic scores for a proposed action, derived from the action name, parameters and agent ID (stub; no Purpose Anchor is consulted). The receipt carries a synthetic PA identifier (`pa::<agent_id>::v1`) and the result carries `stub: true`. Returns verdict (`EXECUTE` / `CLARIFY` / `ESCALATE`) plus per-dimension scores across `purpose`, `scope`, `boundary`, `tool`, `chain`, plus an unsigned integrity-hash receipt envelope. |
+| `telos_score(action_name, action_params, agent_id)` | Return synthetic scores for a proposed action, derived from the action name, parameters and agent ID (stub; no Purpose Anchor is consulted). The receipt carries a synthetic PA identifier (`pa::<agent_id>::v1`) and the result carries `stub: true`. Returns a synthetic verdict (`EXECUTE` / `CLARIFY` / `ESCALATE`) plus per-dimension scores across `purpose`, `scope`, `boundary`, `tool`, `chain`, plus an unsigned integrity-hash receipt envelope. |
 | `telos_verify_native_receipts(receipts_base64, expected_sha256, start_previous)` | Compare supplied native-v2 receipt bytes, native hashes and predecessor links. No signature, score or content validation. |
 | `telos_verify(receipt_json)` | Accept a JSON string or object and verify an unsigned integrity-hash receipt offline (key-free; not a signature check). Returns `{match, recomputed_integrity_hash, signing_status, reason, ...}`. |
 | `telos_get_pa(agent_id)` | Return a fixed synthetic Purpose Anchor (stub; the result carries `stub: true`): purpose, hard boundaries, declared scope, allowed tools, centroid dimensions. |
@@ -48,7 +48,7 @@ can call them as native tools.
 
 | Prompt | Purpose |
 |--------|---------|
-| `governance_review(action)` | Have the model review a proposed action for governance compliance. |
+| `governance_review(action)` | A synthetic walkthrough: the model calls `telos_score` and reports the stub verdict and scores, without inferring any rule (the stub evaluates none). |
 | `audit_walkthrough(start_date, end_date)` | Walk through the audit chain in a date window. |
 
 ---

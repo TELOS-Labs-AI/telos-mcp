@@ -231,7 +231,9 @@ def read_wiki_page(path: str) -> str:
 
 
 def read_centroids(dimension: str) -> dict[str, Any]:
-    """Return the compiled centroid set for a governance dimension.
+    """Return fixture centroid metadata for a governance dimension.
+
+    Stub: synthetic counts and checksum; no compiled centroids are served.
 
     TODO(v0.2): wire to the engine's centroid store; centroids are numpy
     arrays compiled from the customer's wiki/docs corpus.

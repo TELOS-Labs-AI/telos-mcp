@@ -36,7 +36,7 @@ mcp = FastMCP(
         "is queued, and telos_replay reports status stub_not_queued). Returns a "
         "verdict in {EXECUTE, CLARIFY, "
         "ESCALATE} for every scored action. The stub engine produces synthetic "
-        "scores, audit entries and replay results (flagged stub: true) and "
+        "scores and verdicts, audit entries and replay results (flagged stub: true) and "
         "UNSIGNED integrity-hash receipts (signature: null, signing_status: "
         "unsigned_integrity_hash) in the shared telos-receipt envelope."
     ),
@@ -75,8 +75,9 @@ def telos_score(action_name: str, action_params: dict[str, Any], agent_id: str) 
     no Purpose Anchor is consulted. The receipt carries a synthetic PA
     identifier (`pa::<agent_id>::v1`).
 
-    Returns a verdict (EXECUTE / CLARIFY / ESCALATE) plus a 5-dimension
-    score breakdown across purpose, scope, boundary, tool, and chain.
+    Returns a synthetic verdict (EXECUTE / CLARIFY / ESCALATE), taken from
+    the same digest with no rule evaluated, plus a 5-dimension score
+    breakdown across purpose, scope, boundary, tool, and chain.
     Each call also mints an unsigned integrity-hash
     receipt (shared telos-receipt envelope) that `telos_verify` and the
     offline telos-verify CLI can check with no translation.
@@ -197,18 +198,21 @@ def wiki_resource(path: str) -> str:
 
 @mcp.resource("telos://centroids/{dimension}")
 def centroids_resource(dimension: str) -> str:
-    """Return the compiled centroid set for one governance dimension.
+    """Fixture centroid metadata for one governance dimension (stub).
 
     Valid dimensions: purpose, scope, boundary, tool, chain.
-    Returns a JSON document describing the centroid set (count, embedding
-    dim, checksum). Raw float32 arrays are not transported over MCP.
+    Returns a JSON document with synthetic count, embedding dim and checksum
+    (`compiled_from: "stub-corpus"`); no compiled centroids are served.
     """
     return json.dumps(engine.active_engine().read_centroids(dimension), indent=2)
 
 
 @mcp.resource("telos://audit/{date}")
 def audit_resource(date: str) -> str:
-    """Return the audit-chain segment for a given YYYY-MM-DD date (UTC)."""
+    """Return the audit-chain segment for a given YYYY-MM-DD date (UTC).
+
+    Stub: synthetic entries flagged `stub: true`.
+    """
     return json.dumps(engine.active_engine().read_audit_segment(date), indent=2)
 
 
@@ -218,13 +222,14 @@ def audit_resource(date: str) -> str:
 
 @mcp.prompt()
 def governance_review(action: str) -> str:
-    """User-invokable: have the model review a proposed action for governance fit."""
+    """User-invokable: a synthetic walkthrough of telos_score on a proposed action."""
     return (
-        "Review this proposed action for TELOS governance compliance. "
-        "Call `telos_score` with the action and inspect the per-dimension "
-        "scores. If the verdict is CLARIFY, surface which dimension is "
-        "weakest and propose one concrete revision. If ESCALATE, explain "
-        "which boundary or scope rule the action crosses.\n\n"
+        "This is a synthetic walkthrough of the TELOS scoring interface. "
+        "Call `telos_score` with the action and report the verdict and the "
+        "per-dimension scores. The stub engine derives both from a digest of "
+        "the action name, parameters and agent ID and evaluates no rule, so "
+        "say that the result is synthetic (`stub: true`) and do not infer "
+        "which rule, boundary or scope the action involves.\n\n"
         f"Proposed action:\n{action}"
     )
 

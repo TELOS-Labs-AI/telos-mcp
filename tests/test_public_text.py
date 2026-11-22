@@ -249,7 +249,9 @@ def test_centroids_row_describes_fixture_metadata():
 
 
 _ACTIVE_PA_CLAIM = re.compile(
-    r"\bactive (Purpose Anchor|PA)\b|\bused to score\b|(?<!synthetic )\bPurpose Anchor inspection\b",
+    r"\bactive (Purpose Anchor|PA)\b|\bused to score\b|(?<!synthetic )\bPurpose Anchor inspection\b"
+    r"|\bcomplian(ce|t)\b|\bgovernance fit\b|\brules? (the action )?cross|\bcross(es)? [^.]{0,30}\brules?\b"
+    r"|(?<!no )(?<!any )\bcompiled centroid set\b",
     re.IGNORECASE)
 
 
@@ -270,6 +272,17 @@ def _client_visible_text():
     yield "instructions", _flat(server.mcp.instructions)
     for tool in tools:
         yield f"tool:{tool.name}", _flat(tool.description or "")
+        for param, schema in (tool.inputSchema.get("properties") or {}).items():
+            words = " ".join(str(schema.get(k, "")) for k in ("title", "description"))
+            yield f"tool:{tool.name}:{param}", _flat(words)
+    for prompt in asyncio.run(server.mcp.list_prompts()):
+        yield f"prompt:{prompt.name}", _flat(prompt.description or "")
+        args = {a.name: "write_file" for a in (prompt.arguments or [])}
+        rendered = asyncio.run(server.mcp.get_prompt(prompt.name, args))
+        text = " ".join(m.content.text for m in rendered.messages)
+        yield f"prompt:{prompt.name}:rendered", _flat(text)
+    for template in asyncio.run(server.mcp.list_resource_templates()):
+        yield f"resource:{template.uriTemplate}", _flat(template.description or "")
 
 
 def test_no_docstring_or_tool_description_claims_a_real_purpose_anchor():
@@ -278,6 +291,8 @@ def test_no_docstring_or_tool_description_claims_a_real_purpose_anchor():
     sites["README.md"] = _flat(README.read_text())
     # Valid control beside the scan: the scan sees the stub's score and PA docs.
     assert "engine_stub.py:score_action" in sites and "tool:telos_get_pa" in sites
+    assert "prompt:governance_review:rendered" in sites and "tool:telos_score:action_name" in sites
+    assert "resource:telos://centroids/{dimension}" in sites
     hits = {name: m.group(0) for name, text in sites.items()
             for m in [_PA_SCORING_CLAIM.search(text) or _ACTIVE_PA_CLAIM.search(text)] if m}
     assert hits == {}
@@ -297,3 +312,18 @@ def test_capability_lists_name_a_synthetic_purpose_anchor():
     package_doc = _flat(ast.get_docstring(ast.parse((ROOT / "telos_mcp" / "__init__.py").read_text())))
     for text in (readme, package_doc):
         assert "synthetic Purpose Anchor inspection" in text
+
+
+def test_client_surfaces_say_verdicts_and_the_review_prompt_are_synthetic():
+    sites = dict(_client_visible_text())
+    review = sites["prompt:governance_review:rendered"]
+    assert "synthetic walkthrough" in review
+    assert "evaluates no rule" in review
+    assert "synthetic walkthrough" in sites["prompt:governance_review"]
+    assert "synthetic verdict" in sites["tool:telos_score"]
+    assert "synthetic scores and verdicts" in sites["instructions"]
+    assert "Fixture centroid metadata" in sites["resource:telos://centroids/{dimension}"]
+    assert "stub: true" in sites["resource:telos://audit/{date}"]
+    row = _row("| `governance_review(")
+    assert "synthetic walkthrough" in row and not _ACTIVE_PA_CLAIM.search(row)
+    assert "synthetic verdict" in _row("| `telos_score(")
