@@ -1,7 +1,7 @@
 """telos-mcp: Model Context Protocol server for TELOS AI Labs governance.
 
-Exposes TELOS governance primitives (scoring, receipt verification, Purpose
-Anchor inspection, audit chain access, and CCRS counterfactual replay) over
+Exposes TELOS governance primitives (scoring, receipt verification, synthetic
+Purpose Anchor inspection, audit chain access, and CCRS counterfactual replay) over
 the Model Context Protocol so any MCP-compatible client (Claude Desktop,
 Claude Code, Cursor, Cline, etc.) can call them as native tools.
 

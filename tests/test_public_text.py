@@ -248,7 +248,9 @@ def test_centroids_row_describes_fixture_metadata():
     assert "no compiled centroids are served" in row
 
 
-_ACTIVE_PA_CLAIM = re.compile(r"\bactive (Purpose Anchor|PA)\b|\bused to score\b", re.IGNORECASE)
+_ACTIVE_PA_CLAIM = re.compile(
+    r"\bactive (Purpose Anchor|PA)\b|\bused to score\b|(?<!synthetic )\bPurpose Anchor inspection\b",
+    re.IGNORECASE)
 
 
 def _package_docstrings():
@@ -273,6 +275,7 @@ def _client_visible_text():
 def test_no_docstring_or_tool_description_claims_a_real_purpose_anchor():
     sites = dict(_package_docstrings())
     sites.update(_client_visible_text())
+    sites["README.md"] = _flat(README.read_text())
     # Valid control beside the scan: the scan sees the stub's score and PA docs.
     assert "engine_stub.py:score_action" in sites and "tool:telos_get_pa" in sites
     hits = {name: m.group(0) for name, text in sites.items()
@@ -287,3 +290,10 @@ def test_pa_text_says_the_purpose_anchor_is_fixed_and_synthetic():
         assert "fixed synthetic Purpose Anchor" in sites[name], name
     for name in ("tool:telos_score", "engine_stub.py:score_action"):
         assert "no Purpose Anchor is consulted" in sites[name], name
+
+
+def test_capability_lists_name_a_synthetic_purpose_anchor():
+    readme = _flat(README.read_text())
+    package_doc = _flat(ast.get_docstring(ast.parse((ROOT / "telos_mcp" / "__init__.py").read_text())))
+    for text in (readme, package_doc):
+        assert "synthetic Purpose Anchor inspection" in text

@@ -3,7 +3,7 @@
 **Model Context Protocol server for TELOS AI Labs governance.**
 
 Exposes TELOS governance primitives -- action scoring, unsigned
-integrity-hash receipt verification, Purpose Anchor inspection, audit-chain
+integrity-hash receipt verification, synthetic Purpose Anchor inspection, audit-chain
 queries, and counterfactual replay -- as MCP tools, resources, and prompts. Any
 MCP-compatible client (Claude Desktop, Claude Code, Cursor, Cline, etc.)
 can call them as native tools.
