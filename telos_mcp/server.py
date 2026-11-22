@@ -1,8 +1,8 @@
 """telos-mcp server: MCP protocol surface for TELOS governance.
 
 Exposes 6 tools, 3 resource templates, and 2 prompts via FastMCP. All engine
-calls route through `engine_stub` in v0.1; v0.2 swaps in real `telos-gov`
-calls (see engine_stub.py for the swap protocol).
+calls route through `engine_stub`; the TELOS governance engine is private and
+not part of this package.
 
 Run:
     python -m telos_mcp.server          # stdio transport (Claude Desktop default)
@@ -29,15 +29,16 @@ from telos_mcp import __version__, engine
 mcp = FastMCP(
     name="telos-governance",
     instructions=(
-        "TELOS governance server. Score proposed agent actions, verify receipts, "
-        "inspect Purpose Anchors, query the audit chain, and request CCRS "
-        "counterfactual replays (the stub engine runs no replay: nothing is "
-        "queued, and telos_replay reports status stub_not_queued). Returns a verdict in {EXECUTE, CLARIFY, "
+        "TELOS governance server (stub engine). Score proposed agent actions, "
+        "verify receipts, inspect a fixed synthetic Purpose Anchor, query the "
+        "audit chain, and "
+        "request counterfactual replays (the stub engine runs no replay: nothing "
+        "is queued, and telos_replay reports status stub_not_queued). Returns a "
+        "verdict in {EXECUTE, CLARIFY, "
         "ESCALATE} for every scored action. The stub engine produces synthetic "
-        "scores and UNSIGNED integrity-hash receipts (signature: null, "
-        "signing_status: unsigned_integrity_hash) in the shared telos-receipt "
-        "envelope; the real engine and a real signer wire in behind the same "
-        "shape with no schema break."
+        "scores and verdicts, audit entries and replay results (flagged stub: true) and "
+        "UNSIGNED integrity-hash receipts (signature: null, signing_status: "
+        "unsigned_integrity_hash) in the shared telos-receipt envelope."
     ),
 )
 # SDK v1 FastMCP has no version constructor parameter. Its protocol server
@@ -68,13 +69,18 @@ def telos_verify_native_receipts(receipts_base64: str, expected_sha256: str,
 
 @mcp.tool()
 def telos_score(action_name: str, action_params: dict[str, Any], agent_id: str) -> dict[str, Any]:
-    """Score a proposed agent action against the active Purpose Anchor.
+    """Return synthetic scores for a proposed agent action.
 
-    Returns a verdict (EXECUTE / CLARIFY / ESCALATE) plus a 5-dimension
-    score breakdown across purpose, scope, boundary, tool, and chain.
+    Stub: scores are derived from the action name, parameters and agent ID;
+    no Purpose Anchor is consulted. The receipt carries a synthetic PA
+    identifier (`pa::<agent_id>::v1`).
+
+    Returns a synthetic verdict (EXECUTE / CLARIFY / ESCALATE), taken from
+    the same digest with no rule evaluated, plus a 5-dimension score
+    breakdown across purpose, scope, boundary, tool, and chain.
     Each call also mints an unsigned integrity-hash
-    receipt (shared telos-receipt envelope) that `telos_verify` -- and the
-    telos-trust-surface -- can verify with no translation.
+    receipt (shared telos-receipt envelope) that `telos_verify` and the
+    offline telos-verify CLI can check with no translation.
 
     Args:
         action_name: Name of the action being proposed (e.g. "write_file").
@@ -93,8 +99,7 @@ def telos_verify(receipt_json: str | dict[str, Any]) -> dict[str, Any]:
     """Verify an unsigned integrity-hash receipt offline.
 
     Recomputes the receipt's integrity hash over its canonical payload using
-    the shared telos-receipt contract -- the same verifier the trust surface
-    runs -- so the answer matches end-to-end. Key-free; not a signature check.
+    the shared telos-receipt contract. Key-free; not a signature check.
 
     Args:
         receipt_json: The receipt to verify, either as a JSON string or as
@@ -109,14 +114,14 @@ def telos_verify(receipt_json: str | dict[str, Any]) -> dict[str, Any]:
 
 @mcp.tool()
 def telos_get_pa(agent_id: str) -> dict[str, Any]:
-    """Return the active Purpose Anchor for an agent.
+    """Return a fixed synthetic Purpose Anchor for an agent.
 
-    The PA is the governance contract: purpose statement, hard boundaries,
-    declared scope, allowed tool list, and the centroid dimensions used to
-    score the agent's actions.
+    Stub: purpose statement, hard boundaries, declared scope, allowed tool
+    list, and centroid dimension names. Only agent_id, pa_id and compiled_at
+    vary. telos_score does not read it.
 
     Args:
-        agent_id: Stable identifier of the agent whose PA to load.
+        agent_id: Agent identifier placed in the synthetic PA.
 
     Returns:
         Dict with keys: agent_id, pa_id, purpose, boundaries, scope,
@@ -182,27 +187,32 @@ def telos_replay(receipt_id: str, alt_config_path: str) -> dict[str, Any]:
 
 @mcp.resource("telos://wiki/{path}")
 def wiki_resource(path: str) -> str:
-    """Read a TELOS governance wiki page by relative path.
+    """Placeholder governance page for any page name (stub).
 
-    Examples: `telos://wiki/04-governance/architecture/steward-design-spec`
+    The stub engine serves no wiki content: every name returns the same
+    placeholder page naming the request. `path` is one URI segment (no `/`).
+    Example: `telos://wiki/example-page`
     """
     return engine.active_engine().read_wiki_page(path)
 
 
 @mcp.resource("telos://centroids/{dimension}")
 def centroids_resource(dimension: str) -> str:
-    """Return the compiled centroid set for one governance dimension.
+    """Fixture centroid metadata for one governance dimension (stub).
 
     Valid dimensions: purpose, scope, boundary, tool, chain.
-    Returns a JSON document describing the centroid set (count, embedding
-    dim, checksum). Raw float32 arrays are not transported over MCP.
+    Returns a JSON document with synthetic count, embedding dim and checksum
+    (`compiled_from: "stub-corpus"`); no compiled centroids are served.
     """
     return json.dumps(engine.active_engine().read_centroids(dimension), indent=2)
 
 
 @mcp.resource("telos://audit/{date}")
 def audit_resource(date: str) -> str:
-    """Return the audit-chain segment for a given YYYY-MM-DD date (UTC)."""
+    """Return the audit-chain segment for a given YYYY-MM-DD date (UTC).
+
+    Stub: synthetic entries flagged `stub: true`.
+    """
     return json.dumps(engine.active_engine().read_audit_segment(date), indent=2)
 
 
@@ -212,13 +222,14 @@ def audit_resource(date: str) -> str:
 
 @mcp.prompt()
 def governance_review(action: str) -> str:
-    """User-invokable: have the model review a proposed action for governance fit."""
+    """User-invokable: a synthetic walkthrough of telos_score on a proposed action."""
     return (
-        "Review this proposed action for TELOS governance compliance. "
-        "Call `telos_score` with the action and inspect the per-dimension "
-        "scores. If the verdict is CLARIFY, surface which dimension is "
-        "weakest and propose one concrete revision. If ESCALATE, explain "
-        "which boundary or scope rule the action crosses.\n\n"
+        "This is a synthetic walkthrough of the TELOS scoring interface. "
+        "Call `telos_score` with the action and report the verdict and the "
+        "per-dimension scores. The stub engine derives both from a digest of "
+        "the action name, parameters and agent ID and evaluates no rule, so "
+        "say that the result is synthetic (`stub: true`) and do not infer "
+        "which rule, boundary or scope the action involves.\n\n"
         f"Proposed action:\n{action}"
     )
 

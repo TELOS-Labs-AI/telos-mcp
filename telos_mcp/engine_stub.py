@@ -3,21 +3,16 @@
 These functions return realistic-shaped placeholder data so MCP clients can
 exercise the full protocol surface (tools, resources, prompts) without an
 installed governance engine. Every stub carries a TODO marker showing where
-the real `telos_gov` call replaces it.
+the private governance engine's call replaces it.
 
 Receipts use the shared `telos-receipt` contract: when the scorer scores an
 action it mints an UNSIGNED integrity-hash receipt (a key-free SHA-256 over the
 canonical payload; `signature: null`, `signing_status:
-"unsigned_integrity_hash"`). It is the exact envelope the telos-trust-surface
-serves and verifies, so a receipt minted here verifies there unchanged.
+"unsigned_integrity_hash"`) that the offline telos-verify CLI checks unchanged.
 
-Going live is two internal flips, no schema break:
-  - Engine: stub -> real. Add `telos-gov` as a hard dependency and route
-    score/verify/get_pa/audit/replay through the real engine (the dispatcher
-    in engine.py already gates this on TELOS_MCP_ENGINE=real). The receipt
-    payload becomes real verdicts/scores instead of synthetic ones.
-  - Signer: null -> real. A real signature fills the receipt's `signature`
-    field and `signing_status` flips. Every field already exists.
+The TELOS governance engine is private. The dispatcher in engine.py can select
+a real engine with TELOS_MCP_ENGINE=real; in this package that path fails
+closed because no engine is distributed.
 
 Stub determinism: every return value is constructed deterministically from
 the inputs so test snapshots stay stable across runs. No hidden randomness.
@@ -33,8 +28,8 @@ from typing import Any
 import telos_receipt
 
 # Labels the engine that produced a receipt payload. Honest about stub state:
-# the scores are synthetic and the receipt is unsigned until the engine + signer
-# are wired (see module docstring).
+# the scores are synthetic and the receipt is a telos/0.1-unsigned integrity-hash
+# receipt (see module docstring).
 STUB_ENGINE = "telos-mcp v0.1 stub (governance engine not wired; unsigned integrity-hash)"
 
 
@@ -57,15 +52,20 @@ def _now_iso() -> str:
 # -- Tool: telos_score -----------------------------------------------------
 
 def score_action(action_name: str, action_params: dict[str, Any], agent_id: str) -> dict[str, Any]:
-    """Score a proposed action against the active Purpose Anchor.
+    """Return synthetic scores for a proposed action.
+
+    Scores are derived from the action name, parameters and agent ID; no
+    Purpose Anchor is consulted. The receipt carries a synthetic PA identifier
+    (`pa::<agent_id>::v1`).
 
     Mints an unsigned integrity-hash receipt (shared telos-receipt contract)
-    committing to the governance result. The receipt verifies on the
-    telos-trust-surface unchanged.
+    committing to the governance result; telos-verify checks it unchanged.
 
-    TODO: replace the synthetic scoring below with `telos_gov.score_action(...)`.
-    Keep `build_action_receipt(...)` as the receipt mint point; only the verdict
-    and scores change from synthetic to real, and the signer fills `signature`.
+    TODO: replace the synthetic scoring below with the private governance
+    engine's scoring call. Keep `build_action_receipt(...)` as the receipt mint
+    point; only the verdict and scores change from synthetic to real. The receipt
+    stays telos/0.1-unsigned (`signature` null): telos-verify defines signed
+    receipts as separate contract versions, not as a signature added to this one.
     """
     digest = _digest({"action": action_name, "params": action_params, "agent": agent_id})
     # Synthetic, illustrative scores (NOT real calibration) derived from the
@@ -106,13 +106,12 @@ def score_action(action_name: str, action_params: dict[str, Any], agent_id: str)
 def verify_receipt(receipt_json: str | dict[str, Any]) -> dict[str, Any]:
     """Verify an unsigned integrity-hash receipt offline.
 
-    Delegates to the shared `telos-receipt` contract -- the SAME verifier the
-    telos-trust-surface runs -- so MCP-side verify and surface-side verify give
-    identical answers for the same receipt. Recomputes the integrity hash over
-    the receipt payload; it is key-free and is not a signature check.
+    Delegates to the shared `telos-receipt` contract. Recomputes the integrity
+    hash over the receipt payload; it is key-free and is not a signature check.
 
-    TODO: when the signer is wired, add a real signature check ahead of this
-    integrity-hash recompute (the recompute stays as the payload-integrity leg).
+    TODO: signed receipts are separate contract versions (see telos-verify);
+    verifying one needs that version's signature check, with this integrity-hash
+    recompute kept as the payload-integrity leg.
     """
     if isinstance(receipt_json, str):
         try:
@@ -129,10 +128,10 @@ def verify_receipt(receipt_json: str | dict[str, Any]) -> dict[str, Any]:
 # -- Tool: telos_get_pa ----------------------------------------------------
 
 def get_pa(agent_id: str) -> dict[str, Any]:
-    """Return the active Purpose Anchor (PA) for an agent.
+    """Return a fixed synthetic Purpose Anchor (PA) for an agent.
 
-    TODO(v0.2): replace with `telos_gov.get_pa(agent_id)`. Real engine
-    loads the agent's commissioned PA from the vault.
+    Stub: only agent_id, pa_id and compiled_at vary. Scoring does not read it.
+    The real engine's PA lookup replaces this.
     """
     return {
         "agent_id": agent_id,
@@ -221,22 +220,20 @@ def queue_replay(receipt_id: str, alt_config_path: str) -> dict[str, Any]:
 # -- Resource helpers ------------------------------------------------------
 
 def read_wiki_page(path: str) -> str:
-    """Resolve a TELOS wiki page by relative path.
-
-    TODO(v0.2): wire to the governance corpus store and read the actual page
-    content (with appropriate read-only access controls).
-    """
+    """Return a placeholder page for any relative path (stub; no content served)."""
     return (
         f"# TELOS Wiki Stub: {path}\n\n"
-        "This is a placeholder wiki page returned by telos-mcp v0.1.\n"
-        "v0.2 will read the canonical page from the TELOS vault.\n\n"
+        "This is a placeholder page returned by the telos-mcp stub engine.\n"
+        "No wiki content is served by this package.\n\n"
         f"Requested path: `{path}`\n"
         f"Resolved at: {_now_iso()}\n"
     )
 
 
 def read_centroids(dimension: str) -> dict[str, Any]:
-    """Return the compiled centroid set for a governance dimension.
+    """Return fixture centroid metadata for a governance dimension.
+
+    Stub: synthetic counts and checksum; no compiled centroids are served.
 
     TODO(v0.2): wire to the engine's centroid store; centroids are numpy
     arrays compiled from the customer's wiki/docs corpus.
