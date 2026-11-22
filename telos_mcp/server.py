@@ -1,8 +1,8 @@
 """telos-mcp server: MCP protocol surface for TELOS governance.
 
 Exposes 6 tools, 3 resource templates, and 2 prompts via FastMCP. All engine
-calls route through `engine_stub` in v0.1; v0.2 swaps in real `telos-gov`
-calls (see engine_stub.py for the swap protocol).
+calls route through `engine_stub`; the TELOS governance engine is private and
+not part of this package.
 
 Run:
     python -m telos_mcp.server          # stdio transport (Claude Desktop default)
@@ -29,14 +29,13 @@ from telos_mcp import __version__, engine
 mcp = FastMCP(
     name="telos-governance",
     instructions=(
-        "TELOS governance server. Score proposed agent actions, verify receipts, "
-        "inspect Purpose Anchors, query the audit chain, and queue CCRS "
-        "counterfactual replays. Returns a verdict in {EXECUTE, CLARIFY, "
+        "TELOS governance server (stub engine). Score proposed agent actions, "
+        "verify receipts, inspect Purpose Anchors, query the audit chain, and "
+        "request counterfactual replays. Returns a verdict in {EXECUTE, CLARIFY, "
         "ESCALATE} for every scored action. The stub engine produces synthetic "
-        "scores and UNSIGNED integrity-hash receipts (signature: null, "
-        "signing_status: unsigned_integrity_hash) in the shared telos-receipt "
-        "envelope; the real engine and a real signer wire in behind the same "
-        "shape with no schema break."
+        "scores, audit entries and replay results (flagged stub: true) and "
+        "UNSIGNED integrity-hash receipts (signature: null, signing_status: "
+        "unsigned_integrity_hash) in the shared telos-receipt envelope."
     ),
 )
 # SDK v1 FastMCP has no version constructor parameter. Its protocol server
@@ -72,8 +71,8 @@ def telos_score(action_name: str, action_params: dict[str, Any], agent_id: str) 
     Returns a verdict (EXECUTE / CLARIFY / ESCALATE) plus a 5-dimension
     score breakdown across purpose, scope, boundary, tool, and chain.
     Each call also mints an unsigned integrity-hash
-    receipt (shared telos-receipt envelope) that `telos_verify` -- and the
-    telos-trust-surface -- can verify with no translation.
+    receipt (shared telos-receipt envelope) that `telos_verify` and the
+    offline telos-verify CLI can check with no translation.
 
     Args:
         action_name: Name of the action being proposed (e.g. "write_file").
@@ -92,8 +91,7 @@ def telos_verify(receipt_json: str | dict[str, Any]) -> dict[str, Any]:
     """Verify an unsigned integrity-hash receipt offline.
 
     Recomputes the receipt's integrity hash over its canonical payload using
-    the shared telos-receipt contract -- the same verifier the trust surface
-    runs -- so the answer matches end-to-end. Key-free; not a signature check.
+    the shared telos-receipt contract. Key-free; not a signature check.
 
     Args:
         receipt_json: The receipt to verify, either as a JSON string or as
@@ -180,9 +178,11 @@ def telos_replay(receipt_id: str, alt_config_path: str) -> dict[str, Any]:
 
 @mcp.resource("telos://wiki/{path}")
 def wiki_resource(path: str) -> str:
-    """Read a TELOS governance wiki page by relative path.
+    """Placeholder governance page for any page name (stub).
 
-    Examples: `telos://wiki/04-governance/architecture/steward-design-spec`
+    The stub engine serves no wiki content: every name returns the same
+    placeholder page naming the request. `path` is one URI segment (no `/`).
+    Example: `telos://wiki/example-page`
     """
     return engine.active_engine().read_wiki_page(path)
 

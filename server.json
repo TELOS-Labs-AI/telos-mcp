@@ -17,15 +17,7 @@
       "runtimeHint": "uvx",
       "transport": {
         "type": "stdio"
-      },
-      "environmentVariables": [
-        {
-          "name": "TELOS_AGENT_ID",
-          "description": "Default agent_id used when an MCP client does not pass one explicitly. Optional for v0.1 (stub mode); required once the telos-gov engine is wired in v0.2.",
-          "isRequired": false,
-          "isSecret": false
-        }
-      ]
+      }
     }
   ]
 }
