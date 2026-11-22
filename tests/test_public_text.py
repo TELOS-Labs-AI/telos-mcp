@@ -267,14 +267,26 @@ def _package_docstrings():
                 yield f"{path.name}:{getattr(node, 'name', '<module>')}", _flat(doc)
 
 
+def _schema_text(node, path=""):
+    """Every "title" and "description" string at any depth of a JSON schema."""
+    if isinstance(node, dict):
+        for key, value in node.items():
+            if key in ("title", "description") and isinstance(value, str):
+                yield f"{path}/{key}", value
+            else:
+                yield from _schema_text(value, f"{path}/{key}")
+    elif isinstance(node, list):
+        for i, value in enumerate(node):
+            yield from _schema_text(value, f"{path}/{i}")
+
+
 def _client_visible_text():
     tools = asyncio.run(server.mcp.list_tools())
     yield "instructions", _flat(server.mcp.instructions)
     for tool in tools:
         yield f"tool:{tool.name}", _flat(tool.description or "")
-        for param, schema in (tool.inputSchema.get("properties") or {}).items():
-            words = " ".join(str(schema.get(k, "")) for k in ("title", "description"))
-            yield f"tool:{tool.name}:{param}", _flat(words)
+        for path, text in _schema_text(tool.inputSchema):
+            yield f"tool:{tool.name}:schema{path}", _flat(text)
     for prompt in asyncio.run(server.mcp.list_prompts()):
         yield f"prompt:{prompt.name}", _flat(prompt.description or "")
         args = {a.name: "write_file" for a in (prompt.arguments or [])}
@@ -291,11 +303,53 @@ def test_no_docstring_or_tool_description_claims_a_real_purpose_anchor():
     sites["README.md"] = _flat(README.read_text())
     # Valid control beside the scan: the scan sees the stub's score and PA docs.
     assert "engine_stub.py:score_action" in sites and "tool:telos_get_pa" in sites
-    assert "prompt:governance_review:rendered" in sites and "tool:telos_score:action_name" in sites
+    assert "prompt:governance_review:rendered" in sites and "tool:telos_score:schema/properties/action_name/title" in sites
     assert "resource:telos://centroids/{dimension}" in sites
-    hits = {name: m.group(0) for name, text in sites.items()
+    assert _claim_hits(sites) == {}
+
+
+def _claim_hits(sites):
+    return {name: m.group(0) for name, text in sites.items()
             for m in [_PA_SCORING_CLAIM.search(text) or _ACTIVE_PA_CLAIM.search(text)] if m}
-    assert hits == {}
+
+
+_INJECTED = "Checks governance compliance"
+
+
+def _inject(schema, where):
+    if where == "direct-parameter":
+        schema["properties"]["action_name"]["description"] = _INJECTED
+    elif where == "root":
+        schema["description"] = _INJECTED
+    elif where == "defs":
+        schema.setdefault("$defs", {})["Extra"] = {"type": "object", "title": _INJECTED}
+    elif where == "items":
+        schema["properties"]["extra"] = {"type": "array", "items": {"type": "string", "description": _INJECTED}}
+    elif where == "anyOf":
+        schema["properties"]["extra"] = {"anyOf": [{"type": "null"}, {"type": "string", "description": _INJECTED}]}
+    elif where == "nested-properties":
+        schema["properties"]["extra"] = {
+            "type": "object", "properties": {"inner": {"type": "string", "title": _INJECTED}}}
+
+
+@pytest.mark.parametrize(
+    "where", ["direct-parameter", "root", "defs", "items", "anyOf", "nested-properties"])
+def test_scan_catches_a_claim_anywhere_in_a_tool_input_schema(monkeypatch, where):
+    real = asyncio.run(server.mcp.list_tools())
+    # The clean schemas, scanned beside the injected one, produce no hits.
+    assert _claim_hits(dict(_client_visible_text())) == {}
+    dirty = [t.model_copy(deep=True) for t in real]
+    target = next(t for t in dirty if t.name == "telos_score")
+    _inject(target.inputSchema, where)
+
+    async def _tools():
+        return dirty
+
+    monkeypatch.setattr(server.mcp, "list_tools", _tools)
+    hits = _claim_hits(dict(_client_visible_text()))
+    assert len(hits) == 1, hits
+    (name, match), = hits.items()
+    assert name.startswith("tool:telos_score:") and match == "compliance"
 
 
 def test_pa_text_says_the_purpose_anchor_is_fixed_and_synthetic():
