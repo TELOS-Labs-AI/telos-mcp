@@ -29,8 +29,8 @@ can call them as native tools.
 | `telos_verify_native_receipts(receipts_base64, expected_sha256, start_previous)` | Compare supplied native-v2 receipt bytes, native hashes and predecessor links. No signature, score or content validation. |
 | `telos_verify(receipt_json)` | Accept a JSON string or object and verify an unsigned integrity-hash receipt offline (key-free; not a signature check). Returns `{match, recomputed_integrity_hash, signing_status, reason, ...}`. |
 | `telos_get_pa(agent_id)` | Return the active Purpose Anchor: purpose, hard boundaries, declared scope, allowed tools, centroid dimensions. |
-| `telos_audit(start_iso, end_iso)` | Return audit-chain entries within a time window (capped at 100). |
-| `telos_replay(receipt_id, alt_config_path)` | Queue a CCRS counterfactual replay against an alternate config; returns a `job_id`. |
+| `telos_audit(start_iso, end_iso)` | Return audit-chain entries within a time window (capped at 100). Stub: synthetic entries flagged `stub: true`. |
+| `telos_replay(receipt_id, alt_config_path)` | Request a counterfactual replay against an alternate config. Stub: nothing is queued; returns a `job_id` with `status: "stub_not_queued"`. |
 
 ### Resources (LLM-readable)
 
@@ -38,7 +38,7 @@ can call them as native tools.
 |--------------|---------|
 | `telos://wiki/{path}` | A TELOS governance wiki page by relative path. |
 | `telos://centroids/{dimension}` | Compiled centroid metadata for one of `purpose`, `scope`, `boundary`, `tool`, `chain`. |
-| `telos://audit/{date}` | The audit-chain segment for a given `YYYY-MM-DD` (UTC). |
+| `telos://audit/{date}` | The audit-chain segment for a given `YYYY-MM-DD` (UTC). Stub: synthetic entries flagged `stub: true`. |
 
 ### Prompts (user-invokable templates)
 

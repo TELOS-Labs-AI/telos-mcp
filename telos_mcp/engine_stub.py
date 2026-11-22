@@ -154,12 +154,14 @@ def get_pa(agent_id: str) -> dict[str, Any]:
 # -- Tool: telos_audit -----------------------------------------------------
 
 def audit_window(start_iso: str, end_iso: str, cap: int = 100) -> list[dict[str, Any]]:
-    """Return audit-chain entries within a time window (capped).
+    """Return synthetic audit-chain entries within a time window (capped).
 
-    TODO(v0.2): replace with `telos_gov.audit(start, end, limit=cap)` which
-    streams from the engine's append-only audit store.
+    Stub: up to three deterministic, invented entries at the window's quarter
+    points, each flagged `stub: True`, with every timestamp strictly inside the
+    window. Positions are whole microseconds; a window too narrow to hold three
+    distinct interior timestamps at that resolution returns fewer entries, or
+    none. No audit store is read. The real engine's audit query replaces this.
     """
-    # Stub: emit three deterministic entries inside the requested window.
     try:
         start = datetime.fromisoformat(start_iso.replace("Z", "+00:00"))
         end = datetime.fromisoformat(end_iso.replace("Z", "+00:00"))
@@ -170,10 +172,20 @@ def audit_window(start_iso: str, end_iso: str, cap: int = 100) -> list[dict[str,
             return []
     except (ValueError, TypeError):
         return []
-    span = (end - start) / 4
+    # Integer microseconds, floored per position (no rounded quarter-span):
+    # total*k//4 for k <= 3 is always below total, so no position reaches the
+    # end. A position on the start, or repeating the previous one, is skipped.
+    total_us = (end - start) // timedelta(microseconds=1)
+    offsets: list[int] = []
+    for k in (1, 2, 3):
+        off = total_us * k // 4
+        if off > (offsets[-1] if offsets else 0):
+            offsets.append(off)
     entries: list[dict[str, Any]] = []
-    for i in range(min(3, cap)):
-        ts = (start + span * (i + 1)).isoformat(timespec="seconds")
+    for i, off in enumerate(offsets[:cap]):
+        # Default isoformat keeps the fraction when there is one, so a
+        # sub-second window is not truncated to a timestamp before its start.
+        ts = (start + timedelta(microseconds=off)).isoformat()
         entries.append({
             "id": f"audit::{_digest({'ts': ts, 'i': i})[:16]}",
             "timestamp": ts,
@@ -182,6 +194,7 @@ def audit_window(start_iso: str, end_iso: str, cap: int = 100) -> list[dict[str,
             "action_name": ["read_file", "post_message", "write_file"][i % 3],
             "previous_id": entries[-1]["id"] if entries else None,
             "tkey_fingerprint": "stub:0000000000000000",
+            "stub": True,
         })
     return entries
 
@@ -189,20 +202,18 @@ def audit_window(start_iso: str, end_iso: str, cap: int = 100) -> list[dict[str,
 # -- Tool: telos_replay ----------------------------------------------------
 
 def queue_replay(receipt_id: str, alt_config_path: str) -> dict[str, Any]:
-    """Queue a CCRS counterfactual replay job; return job id.
+    """Stub for a counterfactual replay request: nothing is queued or run.
 
-    TODO(v0.2): replace with `telos_gov.replay(receipt_id, alt_config_path)`
-    which enqueues the job onto the CCRS Mode C runner.
+    Returns the deterministic job id the request would carry, with
+    `status: "stub_not_queued"`. There is no result to poll, so no result URI
+    or runtime estimate is returned. The real engine's replay replaces this.
     """
     job_id = f"ccrs::{_digest({'receipt': receipt_id, 'cfg': alt_config_path})[:20]}"
     return {
         "job_id": job_id,
         "receipt_id": receipt_id,
         "alt_config_path": alt_config_path,
-        "status": "queued",
-        "queued_at": _now_iso(),
-        "estimated_runtime_seconds": 12,
-        "result_uri": f"telos://replay/{job_id}",
+        "status": "stub_not_queued",
         "stub": True,
     }
 

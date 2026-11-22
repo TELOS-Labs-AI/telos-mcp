@@ -30,8 +30,9 @@ mcp = FastMCP(
     name="telos-governance",
     instructions=(
         "TELOS governance server. Score proposed agent actions, verify receipts, "
-        "inspect Purpose Anchors, query the audit chain, and queue CCRS "
-        "counterfactual replays. Returns a verdict in {EXECUTE, CLARIFY, "
+        "inspect Purpose Anchors, query the audit chain, and request CCRS "
+        "counterfactual replays (the stub engine runs no replay: nothing is "
+        "queued, and telos_replay reports status stub_not_queued). Returns a verdict in {EXECUTE, CLARIFY, "
         "ESCALATE} for every scored action. The stub engine produces synthetic "
         "scores and UNSIGNED integrity-hash receipts (signature: null, "
         "signing_status: unsigned_integrity_hash) in the shared telos-receipt "
@@ -128,6 +129,9 @@ def telos_get_pa(agent_id: str) -> dict[str, Any]:
 def telos_audit(start_iso: str, end_iso: str) -> dict[str, Any]:
     """Return audit chain entries within a time window.
 
+    Stub engine: the entries are synthetic (three invented entries for a
+    valid window, fewer for a window too narrow to hold three distinct
+    microsecond timestamps strictly inside it), and the result and every entry carry `stub: true`.
     Capped at 100 entries to keep MCP payloads bounded. For deeper queries,
     use the `telos://audit/{date}` resource per-day.
 
@@ -137,7 +141,7 @@ def telos_audit(start_iso: str, end_iso: str) -> dict[str, Any]:
 
     Returns:
         Dict with keys: entries (list, max 100), count, capped (bool),
-        window {start, end}.
+        window {start, end}, stub.
     """
     # Fetch one past the cap so `capped` reports evidence of truncation (a
     # 101st entry existed), not a count that merely landed on the cap.
@@ -149,25 +153,25 @@ def telos_audit(start_iso: str, end_iso: str) -> dict[str, Any]:
         "count": len(entries),
         "capped": capped,
         "window": {"start": start_iso, "end": end_iso},
+        "stub": True,
     }
 
 
 @mcp.tool()
 def telos_replay(receipt_id: str, alt_config_path: str) -> dict[str, Any]:
-    """Queue a CCRS counterfactual replay against an alternate config.
+    """Request a counterfactual replay against an alternate config (stub).
 
-    CCRS Mode C re-runs the lifecycle that produced `receipt_id` under a
-    different governance configuration (alt thresholds, alt centroids,
-    alt PA) and reports verdict deltas. Returns immediately with a job id;
-    poll the result via `telos://replay/{job_id}` once available.
+    A counterfactual replay re-runs the decision that produced `receipt_id`
+    under a different governance configuration and reports verdict deltas.
+    In this release the engine is a stub: nothing is queued or run, and the
+    result says so with `status: "stub_not_queued"`.
 
     Args:
         receipt_id: ID of the receipt to replay against.
         alt_config_path: Path to the alternate config (YAML) to apply.
 
     Returns:
-        Dict with keys: job_id, receipt_id, alt_config_path, status,
-        queued_at, estimated_runtime_seconds, result_uri, stub.
+        Dict with keys: job_id, receipt_id, alt_config_path, status, stub.
     """
     return engine.active_engine().queue_replay(receipt_id=receipt_id, alt_config_path=alt_config_path)
 
@@ -225,9 +229,11 @@ def audit_walkthrough(start_date: str, end_date: str) -> str:
     return (
         "Pull the audit-chain entries from "
         f"{start_date} to {end_date} using the `telos_audit` tool. "
+        "If the result or its entries carry `stub: true`, say first that the "
+        "entries are synthetic stub data, not a real audit record. "
         "For each ESCALATE or CLARIFY entry, summarize: what action was "
         "proposed, which agent proposed it, and what the outcome was. "
-        "Verify the chain is contiguous (every entry's `previous_id` "
+        "Check that the chain is contiguous (every entry's `previous_id` "
         "matches the prior entry's `id`). Flag any breaks."
     )
 
