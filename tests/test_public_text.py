@@ -298,19 +298,31 @@ def _client_visible_text():
 
 
 def test_no_docstring_or_tool_description_claims_a_real_purpose_anchor():
-    sites = dict(_package_docstrings())
-    sites.update(_client_visible_text())
-    sites["README.md"] = _flat(README.read_text())
+    sites = _all_sites()
     # Valid control beside the scan: the scan sees the stub's score and PA docs.
-    assert "engine_stub.py:score_action" in sites and "tool:telos_get_pa" in sites
-    assert "prompt:governance_review:rendered" in sites and "tool:telos_score:schema/properties/action_name/title" in sites
-    assert "resource:telos://centroids/{dimension}" in sites
-    assert _claim_hits(sites) == {}
+    names = {name for name, _text in sites}
+    assert "engine_stub.py:score_action" in names and "tool:telos_get_pa" in names
+    assert "prompt:governance_review:rendered" in names
+    assert "tool:telos_score:schema/properties/action_name/title" in names
+    assert "resource:telos://centroids/{dimension}" in names
+    assert _claim_hits(sites) == []
+
+
+def _all_sites():
+    return [*_package_docstrings(), *_client_visible_text(), ("README.md", _flat(README.read_text()))]
 
 
 def _claim_hits(sites):
-    return {name: m.group(0) for name, text in sites.items()
-            for m in [_PA_SCORING_CLAIM.search(text) or _ACTIVE_PA_CLAIM.search(text)] if m}
+    # Sites are (name, text) pairs in a list, never a dict keyed by name, so two
+    # sites that share a name are both scanned and neither can hide the other.
+    return [(name, m.group(0)) for name, text in sites
+            for m in [_PA_SCORING_CLAIM.search(text) or _ACTIVE_PA_CLAIM.search(text)] if m]
+
+
+def _only(sites, name):
+    texts = [text for site, text in sites if site == name]
+    assert len(texts) == 1, (name, len(texts))
+    return texts[0]
 
 
 _INJECTED = "Checks governance compliance"
@@ -337,7 +349,7 @@ def _inject(schema, where):
 def test_scan_catches_a_claim_anywhere_in_a_tool_input_schema(monkeypatch, where):
     real = asyncio.run(server.mcp.list_tools())
     # The clean schemas, scanned beside the injected one, produce no hits.
-    assert _claim_hits(dict(_client_visible_text())) == {}
+    assert _claim_hits(_all_sites()) == []
     dirty = [t.model_copy(deep=True) for t in real]
     target = next(t for t in dirty if t.name == "telos_score")
     _inject(target.inputSchema, where)
@@ -346,19 +358,18 @@ def test_scan_catches_a_claim_anywhere_in_a_tool_input_schema(monkeypatch, where
         return dirty
 
     monkeypatch.setattr(server.mcp, "list_tools", _tools)
-    hits = _claim_hits(dict(_client_visible_text()))
+    hits = _claim_hits(_all_sites())
     assert len(hits) == 1, hits
-    (name, match), = hits.items()
+    (name, match), = hits
     assert name.startswith("tool:telos_score:") and match == "compliance"
 
 
 def test_pa_text_says_the_purpose_anchor_is_fixed_and_synthetic():
-    sites = dict(_package_docstrings())
-    sites.update(_client_visible_text())
+    sites = [*_package_docstrings(), *_client_visible_text()]
     for name in ("instructions", "tool:telos_get_pa", "engine_stub.py:get_pa"):
-        assert "fixed synthetic Purpose Anchor" in sites[name], name
+        assert "fixed synthetic Purpose Anchor" in _only(sites, name), name
     for name in ("tool:telos_score", "engine_stub.py:score_action"):
-        assert "no Purpose Anchor is consulted" in sites[name], name
+        assert "no Purpose Anchor is consulted" in _only(sites, name), name
 
 
 def test_capability_lists_name_a_synthetic_purpose_anchor():
@@ -369,15 +380,50 @@ def test_capability_lists_name_a_synthetic_purpose_anchor():
 
 
 def test_client_surfaces_say_verdicts_and_the_review_prompt_are_synthetic():
-    sites = dict(_client_visible_text())
-    review = sites["prompt:governance_review:rendered"]
+    sites = list(_client_visible_text())
+    review = _only(sites, "prompt:governance_review:rendered")
     assert "synthetic walkthrough" in review
     assert "evaluates no rule" in review
-    assert "synthetic walkthrough" in sites["prompt:governance_review"]
-    assert "synthetic verdict" in sites["tool:telos_score"]
-    assert "synthetic scores and verdicts" in sites["instructions"]
-    assert "Fixture centroid metadata" in sites["resource:telos://centroids/{dimension}"]
-    assert "stub: true" in sites["resource:telos://audit/{date}"]
+    assert "synthetic walkthrough" in _only(sites, "prompt:governance_review")
+    assert "synthetic verdict" in _only(sites, "tool:telos_score")
+    assert "synthetic scores and verdicts" in _only(sites, "instructions")
+    assert "Fixture centroid metadata" in _only(sites, "resource:telos://centroids/{dimension}")
+    assert "stub: true" in _only(sites, "resource:telos://audit/{date}")
     row = _row("| `governance_review(")
     assert "synthetic walkthrough" in row and not _ACTIVE_PA_CLAIM.search(row)
     assert "synthetic verdict" in _row("| `telos_score(")
+
+
+@pytest.mark.parametrize("claim_in", ["nested-property", "slash-named-property", "both"])
+def test_scan_keeps_a_claim_when_two_schema_paths_spell_the_same(monkeypatch, claim_in):
+    real = asyncio.run(server.mcp.list_tools())
+    assert _claim_hits(_all_sites()) == []
+    dirty = [t.model_copy(deep=True) for t in real]
+    target = next(t for t in dirty if t.name == "telos_score")
+    nested_title = _INJECTED if claim_in in ("nested-property", "both") else "Inner"
+    slash_title = _INJECTED if claim_in in ("slash-named-property", "both") else "Inner"
+    # A property literally named "settings/properties/inner" has the same joined
+    # path as the nested settings.inner. The claim comes first in one case and
+    # second in the other, so neither order may hide it; with both, both count.
+    if claim_in != "slash-named-property":
+        target.inputSchema["properties"]["settings"] = {
+            "type": "object", "properties": {"inner": {"type": "string", "title": nested_title}}}
+        target.inputSchema["properties"]["settings/properties/inner"] = {"type": "string", "title": slash_title}
+    else:
+        target.inputSchema["properties"]["settings/properties/inner"] = {"type": "string", "title": slash_title}
+        target.inputSchema["properties"]["settings"] = {
+            "type": "object", "properties": {"inner": {"type": "string", "title": nested_title}}}
+
+    async def _tools():
+        return dirty
+
+    monkeypatch.setattr(server.mcp, "list_tools", _tools)
+    hits = _claim_hits(_all_sites())
+    assert len(hits) == (2 if claim_in == "both" else 1), hits
+
+
+def test_only_refuses_a_site_name_that_appears_twice():
+    sites = [("a", "one"), ("b", "two"), ("b", "three")]
+    assert _only(sites, "a") == "one"
+    with pytest.raises(AssertionError):
+        _only(sites, "b")
