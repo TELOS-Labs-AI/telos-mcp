@@ -6,6 +6,8 @@ import json
 import re
 from pathlib import Path
 
+import pytest
+
 from telos_mcp import server
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -190,15 +192,50 @@ def test_status_note_flags_only_the_responses_that_carry_stub_true():
     assert "wiki pages are a plain Markdown placeholder" in text
 
 
-def test_score_and_pa_rows_describe_a_fixed_synthetic_purpose_anchor():
-    _c, scored = asyncio.run(server.mcp.call_tool(
-        "telos_score", {"action_name": "write_file", "action_params": {}, "agent_id": "a"}))
+def test_pa_row_describes_a_fixed_synthetic_purpose_anchor():
     _c, pa = asyncio.run(server.mcp.call_tool("telos_get_pa", {"agent_id": "a"}))
-    assert scored["stub"] is True and pa["stub"] is True
-    assert scored["receipt"]["payload"]["pa_id"] == pa["pa_id"] == "pa::a::v1"
-    for row in (_row("| `telos_score("), _row("| `telos_get_pa(")):
-        assert "the active Purpose Anchor" not in row
-        assert "fixed synthetic Purpose Anchor" in row
+    assert pa["stub"] is True and pa["pa_id"] == "pa::a::v1"
+    row = _row("| `telos_get_pa(")
+    assert "the active Purpose Anchor" not in row
+    assert "fixed synthetic Purpose Anchor" in row
+
+
+def _score_tool_description():
+    tools = asyncio.run(server.mcp.list_tools())
+    return next(t.description for t in tools if t.name == "telos_score")
+
+
+_PA_SCORING_CLAIM = re.compile(r"against [^.|]{0,40}Purpose Anchor", re.IGNORECASE)
+
+
+def test_score_text_does_not_claim_purpose_anchor_scoring():
+    # Valid text beside the invalid pattern: the PA row may name a Purpose
+    # Anchor; the score row and tool description may not claim to score
+    # against one.
+    assert "fixed synthetic Purpose Anchor" in _row("| `telos_get_pa(")
+    for text in (_row("| `telos_score("), _flat(_score_tool_description())):
+        assert not _PA_SCORING_CLAIM.search(text), text
+        assert "action name, parameters and agent ID" in text
+        assert "no Purpose Anchor is consulted" in text
+        assert "`pa::<agent_id>::v1`" in text
+
+
+def test_scores_do_not_depend_on_the_purpose_anchor_lookup(monkeypatch):
+    from telos_mcp import engine_stub
+
+    args = {"action_name": "write_file", "action_params": {"path": "x"}, "agent_id": "a"}
+    _c, before = asyncio.run(server.mcp.call_tool("telos_score", args))
+
+    def _no_pa(agent_id):
+        raise AssertionError("Purpose Anchor lookup called during scoring")
+
+    monkeypatch.setattr(engine_stub, "get_pa", _no_pa)
+    _c, after = asyncio.run(server.mcp.call_tool("telos_score", args))
+    with pytest.raises(Exception, match="Purpose Anchor lookup called"):
+        asyncio.run(server.mcp.call_tool("telos_get_pa", {"agent_id": "a"}))
+    for key in ("verdict", "composite_score", "scores", "stub"):
+        assert after[key] == before[key]
+    assert after["receipt"]["payload"]["pa_id"] == "pa::a::v1"
 
 
 def test_centroids_row_describes_fixture_metadata():

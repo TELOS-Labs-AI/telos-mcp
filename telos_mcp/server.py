@@ -68,7 +68,11 @@ def telos_verify_native_receipts(receipts_base64: str, expected_sha256: str,
 
 @mcp.tool()
 def telos_score(action_name: str, action_params: dict[str, Any], agent_id: str) -> dict[str, Any]:
-    """Score a proposed agent action against the active Purpose Anchor.
+    """Return synthetic scores for a proposed agent action.
+
+    Stub: scores are derived from the action name, parameters and agent ID;
+    no Purpose Anchor is consulted. The receipt carries a synthetic PA
+    identifier (`pa::<agent_id>::v1`).
 
     Returns a verdict (EXECUTE / CLARIFY / ESCALATE) plus a 5-dimension
     score breakdown across purpose, scope, boundary, tool, and chain.
