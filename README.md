@@ -11,8 +11,9 @@ can call them as native tools.
 > **0.1.x status: stub engine.** The TELOS governance engine is private and is
 > not part of this package. This release ships the full protocol surface backed
 > by a **stub** engine, so clients can exercise every tool, resource, and prompt
-> end-to-end. Scores, audit entries, replay results and wiki pages are synthetic
-> placeholders, and results say so (`stub: true`). Receipts are **unsigned
+> end-to-end. Scores, audit entries and replay results are synthetic, and those
+> results say so (`stub: true`); wiki pages are a plain Markdown placeholder that
+> says it is one. Receipts are **unsigned
 > integrity-hash** receipts (`signature: null`,
 > `signing_status: "unsigned_integrity_hash"`) built with
 > [telos-receipt](https://github.com/TELOS-Labs-AI/telos-receipt): a key-free
@@ -28,10 +29,10 @@ can call them as native tools.
 
 | Tool | Purpose |
 |------|---------|
-| `telos_score(action_name, action_params, agent_id)` | Score a proposed action against the active Purpose Anchor. Returns verdict (`EXECUTE` / `CLARIFY` / `ESCALATE`) plus per-dimension scores across `purpose`, `scope`, `boundary`, `tool`, `chain`, plus an unsigned integrity-hash receipt envelope. |
+| `telos_score(action_name, action_params, agent_id)` | Score a proposed action against a fixed synthetic Purpose Anchor (stub; scores are synthetic and the result carries `stub: true`). Returns verdict (`EXECUTE` / `CLARIFY` / `ESCALATE`) plus per-dimension scores across `purpose`, `scope`, `boundary`, `tool`, `chain`, plus an unsigned integrity-hash receipt envelope. |
 | `telos_verify_native_receipts(receipts_base64, expected_sha256, start_previous)` | Compare supplied native-v2 receipt bytes, native hashes and predecessor links. No signature, score or content validation. |
 | `telos_verify(receipt_json)` | Accept a JSON string or object and verify an unsigned integrity-hash receipt offline (key-free; not a signature check). Returns `{match, recomputed_integrity_hash, signing_status, reason, ...}`. |
-| `telos_get_pa(agent_id)` | Return the active Purpose Anchor: purpose, hard boundaries, declared scope, allowed tools, centroid dimensions. |
+| `telos_get_pa(agent_id)` | Return a fixed synthetic Purpose Anchor (stub; the result carries `stub: true`): purpose, hard boundaries, declared scope, allowed tools, centroid dimensions. |
 | `telos_audit(start_iso, end_iso)` | Return audit-chain entries within a time window (capped at 100). Stub: synthetic entries flagged `stub: true`. |
 | `telos_replay(receipt_id, alt_config_path)` | Request a counterfactual replay against an alternate config. Stub: nothing is queued; returns a `job_id` with `status: "stub_not_queued"`. |
 
@@ -40,7 +41,7 @@ can call them as native tools.
 | URI template | Returns |
 |--------------|---------|
 | `telos://wiki/{path}` | Placeholder page for any single-segment name, e.g. `telos://wiki/example-page` (stub; no wiki content is served). |
-| `telos://centroids/{dimension}` | Compiled centroid metadata for one of `purpose`, `scope`, `boundary`, `tool`, `chain`. |
+| `telos://centroids/{dimension}` | Fixture centroid metadata (synthetic counts and checksum, `compiled_from: "stub-corpus"`; no compiled centroids are served) for one of `purpose`, `scope`, `boundary`, `tool`, `chain`. |
 | `telos://audit/{date}` | The audit-chain segment for a given `YYYY-MM-DD` (UTC). Stub: synthetic entries flagged `stub: true`. |
 
 ### Prompts (user-invokable templates)
