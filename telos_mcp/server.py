@@ -31,7 +31,9 @@ mcp = FastMCP(
     instructions=(
         "TELOS governance server (stub engine). Score proposed agent actions, "
         "verify receipts, inspect Purpose Anchors, query the audit chain, and "
-        "request counterfactual replays. Returns a verdict in {EXECUTE, CLARIFY, "
+        "request counterfactual replays (the stub engine runs no replay: nothing "
+        "is queued, and telos_replay reports status stub_not_queued). Returns a "
+        "verdict in {EXECUTE, CLARIFY, "
         "ESCALATE} for every scored action. The stub engine produces synthetic "
         "scores, audit entries and replay results (flagged stub: true) and "
         "UNSIGNED integrity-hash receipts (signature: null, signing_status: "

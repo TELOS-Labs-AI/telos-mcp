@@ -166,7 +166,9 @@ def audit_window(start_iso: str, end_iso: str, cap: int = 100) -> list[dict[str,
     span = (end - start) / 4
     entries: list[dict[str, Any]] = []
     for i in range(min(3, cap)):
-        ts = (start + span * (i + 1)).isoformat(timespec="seconds")
+        # Default isoformat keeps the fraction when there is one, so a
+        # sub-second window is not truncated to a timestamp before its start.
+        ts = (start + span * (i + 1)).isoformat()
         entries.append({
             "id": f"audit::{_digest({'ts': ts, 'i': i})[:16]}",
             "timestamp": ts,
