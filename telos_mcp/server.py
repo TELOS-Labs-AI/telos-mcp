@@ -128,8 +128,9 @@ def telos_get_pa(agent_id: str) -> dict[str, Any]:
 def telos_audit(start_iso: str, end_iso: str) -> dict[str, Any]:
     """Return audit chain entries within a time window.
 
-    Stub engine: the entries are synthetic (three invented entries for any
-    valid window), and the result and every entry carry `stub: true`.
+    Stub engine: the entries are synthetic (three invented entries for a
+    valid window, fewer for a window too narrow to hold three distinct
+    microsecond timestamps strictly inside it), and the result and every entry carry `stub: true`.
     Capped at 100 entries to keep MCP payloads bounded. For deeper queries,
     use the `telos://audit/{date}` resource per-day.
 

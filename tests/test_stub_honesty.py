@@ -152,3 +152,39 @@ def test_whole_second_windows_keep_whole_second_timestamps():
     assert [e["timestamp"] for e in entries] == [
         "2026-04-25T06:00:00+00:00", "2026-04-25T12:00:00+00:00", "2026-04-25T18:00:00+00:00",
     ]
+
+
+@pytest.mark.parametrize(
+    "start, end, count",
+    [
+        ("2026-04-25T00:00:00Z", "2026-04-26T00:00:00Z", 3),
+        ("2026-04-25T00:00:00.100Z", "2026-04-25T00:00:00.500Z", 3),
+        ("2026-04-25T00:00:00.000004Z", "2026-04-25T00:00:00.000008Z", 3),
+        ("2026-04-25T00:00:00.000001Z", "2026-04-25T00:00:00.000004Z", 2),
+        ("2026-04-25T00:00:00.000001Z", "2026-04-25T00:00:00.000003Z", 1),
+        ("2026-04-25T00:00:00.000001Z", "2026-04-25T00:00:00.000002Z", 0),
+    ],
+    ids=["normal", "fraction-100-500ms", "4us", "3us", "2us", "1us"],
+)
+def test_narrow_windows_return_fewer_entries_never_one_outside(start, end, count):
+    # Beside a normal window: a window too narrow for three distinct interior
+    # timestamps at microsecond resolution returns fewer, never one on or
+    # outside a bound.
+    result = _structured("telos_audit", {"start_iso": start, "end_iso": end})
+    stamps = [_parse(e["timestamp"]) for e in result["entries"]]
+    assert all(_parse(start) < s < _parse(end) for s in stamps), stamps
+    assert stamps == sorted(set(stamps))
+    assert result["count"] == len(stamps) == count
+    assert result["stub"] is True
+
+
+def test_audit_docstrings_say_narrow_windows_return_fewer_entries():
+    from telos_mcp import engine_stub
+
+    stub_doc = " ".join(engine_stub.audit_window.__doc__.split())
+    assert "Stub: three deterministic, invented entries" not in stub_doc
+    assert "returns fewer entries, or none" in stub_doc
+    tools = asyncio.run(server.mcp.list_tools())
+    tool_doc = " ".join(next(t.description for t in tools if t.name == "telos_audit").split())
+    assert "three invented entries for any valid window" not in tool_doc
+    assert "fewer for a window too narrow" in tool_doc
